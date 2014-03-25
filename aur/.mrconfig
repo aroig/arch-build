@@ -22,3 +22,6 @@ checkout=aur_checkout coffee-script
 
 [underscorejs]
 checkout=aur_checkout underscorejs
+
+[nodejs-mkdirp]
+checkout=aur_checkout nodejs-mkdirp

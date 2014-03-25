@@ -16,6 +16,39 @@ repoadd = repo_add "$PWD" "$AB2_VAR_DIR/arch/devel"
 
 [connman-ui-dev]
 
+[coq-hott-dev]
+
 [cower-dev]
 
 [dwb-dev]
+
+[elinks-dev]
+
+[emacs-auctex-dev]
+
+[emacs-auto-complete-dev]
+
+[emacs-evil-dev]
+
+[emacs-git-modes-dev]
+
+[emacs-haskell-mode-dev]
+
+[emacs-helm-dev]
+
+[emacs-jabber-dev]
+
+[emacs-lua-mode-dev]
+
+[emacs-magit-dev]
+
+[emacs-org-mode-dev]
+
+[emacs-proofgeneral-dev]
+
+[emacs-twittering-mode-dev]
+
+[emacs-undo-tree-dev]
+
+[emacs-yasnippet-dev]
+

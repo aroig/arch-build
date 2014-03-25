@@ -4,3 +4,6 @@ include=cat $AB2_ARCH_DIR/mrcommon
 
 repoadd = repo_add "$PWD" "$AB2_VAR_DIR/arch/abdo"
 
+[abdo-font-collection]
+
+[brother-hl2250dn]
