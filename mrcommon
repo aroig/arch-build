@@ -3,7 +3,9 @@
 # ---------------------------------------------------------------------------- #
 
 lib=
-        builddir="$HOME/opt/arch/build"
+        # need to dereference symlinks, otherwise subtle crap may happen when building stuff.
+        # for instance, emacs gets the autoloads paths wrong
+        builddir="$(readlink -f $HOME/opt/arch/build)"
         commit_if_changes() {
             num=$(git status --porcelain | wc -l)
             if [[ $num -ge 1 ]]; then            
@@ -15,12 +17,15 @@ lib=
                 git commit -m "$1 ($num files)"
             fi
         }
+        package_uptodate() {
+            false
+        }
         package_build() {
             pkgname=$(basename "$1")
             mkdir -p "$builddir"
             rsync -avz --exclude=.git ./ "$builddir/$pkgname"
             cd "$builddir/$pkgname"
-            makepkg --sign
+            makepkg -f --sign
         }
         package_install() {
             pkgname=$(basename "$1")
@@ -54,7 +59,14 @@ lib=
             commit_if_changes "Updated from AUR"
         }
 
+build= 
+       if package_uptodate "$PWD"; then
+          echo "Package is up to date. No need to rebuild."
+       else
+          package_build "$PWD"
+       fi
 
-build= package_build "$PWD"
+rebuild= package_build "$PWD"
+
 install= package_install "$PWD"
 
