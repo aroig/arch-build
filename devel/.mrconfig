@@ -1,0 +1,21 @@
+[DEFAULT]
+
+include=cat $AB2_ARCH_DIR/mrcommon
+
+repoadd = repo_add "$PWD" "$AB2_VAR_DIR/arch/devel"
+
+[asym-dev]
+
+[async-dev]
+
+[awesome-dev]
+
+[cali-dev]
+
+[compton-dev]
+
+[connman-ui-dev]
+
+[cower-dev]
+
+[dwb-dev]

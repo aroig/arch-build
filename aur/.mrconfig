@@ -1,0 +1,24 @@
+[DEFAULT]
+
+include=cat $AB2_ARCH_DIR/mrcommon
+
+update= aur_update "$PWD"
+repoadd = repo_add "$PWD" "$AB2_VAR_DIR/arch/aur"
+
+[ec2-api-tools]
+checkout=aur_checkout ec2-api-tools
+
+[dropbox]
+checkout=aur_checkout dropbox
+
+[python2-pyicu]
+checkout=aur_checkout python2-pyicu
+
+[python2-vobject]
+checkout=aur_checkout python2-vobject
+
+[coffee-script]
+checkout=aur_checkout coffee-script
+
+[underscorejs]
+checkout=aur_checkout underscorejs

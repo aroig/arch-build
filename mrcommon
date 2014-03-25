@@ -1,0 +1,60 @@
+# ---------------------------------------------------------------------------- #
+# Utility functions to handle arch linux package building and AUR downloads    #
+# ---------------------------------------------------------------------------- #
+
+lib=
+        builddir="$HOME/opt/arch/build"
+        commit_if_changes() {
+            num=$(git status --porcelain | wc -l)
+            if [[ $num -ge 1 ]]; then            
+                git add -A .
+            fi
+      
+            num=$(git status --porcelain | wc -l)
+            if [[ $num -ge 1 ]]; then
+                git commit -m "$1 ($num files)"
+            fi
+        }
+        package_build() {
+            pkgname=$(basename "$1")
+            mkdir -p "$builddir"
+            rsync -avz --exclude=.git ./ "$builddir/$pkgname"
+            cd "$builddir/$pkgname"
+            makepkg --sign
+        }
+        package_install() {
+            pkgname=$(basename "$1")
+            find "$builddir/$pkgname" -maxdepth 1 -name \*.pkg.tar.xz | \
+            while read pkg; do
+                sudo pacman --noconfirm -U "file://$pkg"
+            done            
+        }
+        repo_add() {
+            pkgname=$(basename "$1")
+            tgtrepo="$2"
+            find "$builddir/$pkgname" -maxdepth 1 -name \*.pkg.tar.xz | \
+            while read pkg; do
+                cp "$pkg" "$tgtrepo/"
+                cp "$pkg.sig" "$tgtrepo/"
+                repo-add -n "$tgtrepo/$(basename $tgtrepo).db.tar.gz" "$pkg"
+            done
+        }
+        aur_checkout() {
+            cower -d "$1"
+            cd "$1" && git init && git add -A . && git commit -m 'Initial commit'
+        }
+        aur_update() {
+            # only update on branch master, to preserve possible local changes.
+            if [ ! $(git symbolic-ref HEAD 2>/dev/null) == 'refs/heads/master' ]; then
+                echo "Not on branch master"
+                return 1
+            fi              
+            pkgname=$(basename "$1")
+            cower -df "$pkgname" -t ..
+            commit_if_changes "Updated from AUR"
+        }
+
+
+build= package_build "$PWD"
+install= package_install "$PWD"
+
