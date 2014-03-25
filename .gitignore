@@ -1,8 +1,4 @@
 abdo/*
-!abdo/.mrconfig
 aur/*
-!aur/.mrconfig
 devel/*
-!devel/.mrconfig
-!mrcommon
-!.gitignore
+!.mrconfig
