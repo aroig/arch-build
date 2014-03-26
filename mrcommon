@@ -9,7 +9,7 @@ lib=
         }
         ##
         #  usage : source_safe <pkgbuild>
-        #   desc : source a PKGBUILD safely
+        #   desc : source a file safely
         ##
         source_safe() {
             shopt -u extglob
@@ -19,6 +19,10 @@ lib=
             fi
             shopt -s extglob
         }
+        ##
+        #  usage : run_function_safe <func>
+        #   desc : run a function safely
+        ##
         run_function_safe() {
             local restoretrap
             local pkgfunc="$1"
@@ -30,6 +34,18 @@ lib=
             eval $restoretrap
             set +E
             set +e
+        }
+        ##
+        #  usage : source_pkgbuild <pkgbuild>
+        #   desc : source a PKGBUILD safely
+        ##
+        source_pkgbuild() {
+            pkgbuild="$1"
+            source_safe "$pkgbuild"
+            pkgbase=${pkgbase:-${pkgname[0]}}
+            srcdir="$path/src"
+            pkgdir="$path/pkg/$pkgbase"
+            epoch=${epoch:-0}
         }
         ##
         #  usage : get_full_version <pkgname>
@@ -118,11 +134,7 @@ lib=
             pkgbuild="$path/PKGBUILD"
             ( 
                 cd "$path"
-                source_safe "$pkgbuild"
-                pkgbase=${pkgbase:-${pkgname[0]}}
-                srcdir="$path/src"
-                pkgdir="$path/pkg/$pkgbase"
-                epoch=${epoch:-0}
+                source_pkgbuild "$pkgbuild"
                 if have_function pkgver; then
                     pkgver=$(run_function_safe pkgver)
                 fi
