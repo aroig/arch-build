@@ -1,0 +1,7 @@
+[DEFAULT]
+
+include=cat $AB2_ARCH_DIR/mrcommon
+
+repoadd =
+         buildpath=$(builddir_path "$PWD")
+         package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/abs"
