@@ -135,9 +135,6 @@ lib=
             ( 
                 cd "$path"
                 source_pkgbuild "$pkgbuild"
-                if have_function pkgver; then
-                    pkgver=$(run_function_safe pkgver)
-                fi
                 fullver=$(get_full_version)
                 pkgarch=$(get_pkg_arch)
                 echo "$path/${pkgname}-${fullver}-${pkgarch}.pkg.tar.xz"
