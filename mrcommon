@@ -226,7 +226,7 @@ lib=
 
 build= 
         buildpath=$(prepare_build "$PWD")
-        package_download "$buildpath"
+        ( package_download "$buildpath" )  > /dev/null 2>&1 
         if package_uptodate "$buildpath"; then
             echo "Package is up to date. No need to rebuild."
         else
