@@ -9,33 +9,38 @@ repoadd =
         buildpath=$(builddir_path "$PWD")
         package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/aur"
 
+register = 
+       pkgname=$( basename "$PWD" )
+       mr config "$pkgname" checkout="aur_checkout $pkgname"
+
+
 [acroread]
-checkout=aur_checkout acroread
+checkout = aur_checkout acroread
 
 [dropbox]
-checkout=aur_checkout dropbox
+checkout = aur_checkout dropbox
 
 [ec2-api-tools]
-checkout=aur_checkout ec2-api-tools
+checkout = aur_checkout ec2-api-tools
 
 [impose+]
-checkout=aur_checkout impose+
+checkout = aur_checkout impose+
 
 [python2-pyicu]
-checkout=aur_checkout python2-pyicu
+checkout = aur_checkout python2-pyicu
 
 [python2-vobject]
-checkout=aur_checkout python2-vobject
+checkout = aur_checkout python2-vobject
 
 [coffee-script]
-checkout=aur_checkout coffee-script
+checkout = aur_checkout coffee-script
 
 [perl-term-extendedcolor]
-checkout=aur_checkout perl-term-extendedcolor
+checkout = aur_checkout perl-term-extendedcolor
 
 [underscorejs]
-checkout=aur_checkout underscorejs
+checkout = aur_checkout underscorejs
 
 [nodejs-mkdirp]
-checkout=aur_checkout nodejs-mkdirp
+checkout = aur_checkout nodejs-mkdirp
 
