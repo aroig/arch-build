@@ -1,0 +1,24 @@
+[DEFAULT]
+
+include=cat $AB2_ARCH_DIR/mrcommon
+
+update= aur_update "$PWD"
+repoadd = repo_add "$PWD" "$AB2_VAR_DIR/arch/aur"
+
+[mingw-w64-boost]
+checkout=aur_checkout mingw-w64-boost
+
+[mingw-w64-lua]
+checkout=aur_checkout mingw-w64-lua
+
+[mingw-w64-qt5-base-opengl]
+checkout=aur_checkout mingw-w64-qt5-base-opengl
+
+[mingw-w64-qt5-multimedia]
+checkout=aur_checkout mingw-w64-qt5-multimedia
+
+[mingw-w64-qt5-translations]
+checkout=aur_checkout mingw-w64-qt5-translations
+
+[nsis]
+checkout=aur_checkout nsis
