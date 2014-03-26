@@ -192,6 +192,13 @@ lib=
                 sudo pacman --noconfirm -U "file://$pkgfile"               
             fi             
         }
+        package_install_deps() {
+            # package_install_deps <path>
+            # Install package deps.
+            path="$1"
+            cd "$path"
+            makepkg -s
+        }
         package_repoadd() {
             # package_repoadd <path>
             # Add package to the pacman repo and clean older versions of it.
@@ -248,6 +255,9 @@ rebuild=
 install= 
         buildpath=$(builddir_path "$PWD")
         package_install "$buildpath"
+
+installdeps=
+        package_install_deps "$buildpath"
 
 update=
         mr build
