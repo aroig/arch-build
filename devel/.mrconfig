@@ -2,9 +2,31 @@
 
 include=cat $AB2_ARCH_DIR/mrcommon
 
+lib =
+        source_tree_paths() {
+            path="$1"
+            pkgbuild="$path/PKGBUILD"
+            (
+                cd "$path"
+                source_pkgbuild "$pkgbuild"
+                for src in "${source[@]}"; do
+                    echo "$src" | sed 's|^.*file://\(.*\)$|\1|'
+                done 
+            )
+        }
+
+fetch = 
+        source_tree_paths "$PWD" |
+        while read src; do
+            if [ -d "$src" ]; then
+                cd "$src"
+                mr update
+            fi   
+        done
+
 repoadd = 
-         buildpath=$(builddir_path "$PWD")
-         package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/devel"
+        buildpath=$(builddir_path "$PWD")
+        package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/devel"
 
 [asym-dev]
 

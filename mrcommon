@@ -225,19 +225,22 @@ lib=
         }
 
 build= 
-         buildpath=$(prepare_build "$PWD")
-         package_download "$buildpath"
-         if package_uptodate "$buildpath"; then
-             echo "Package is up to date. No need to rebuild."
-         else
-             package_build "$buildpath"
-         fi
+        buildpath=$(prepare_build "$PWD")
+        package_download "$buildpath"
+        if package_uptodate "$buildpath"; then
+            echo "Package is up to date. No need to rebuild."
+        else
+            package_build "$buildpath"
+        fi
 
 rebuild= 
-         buildpath=$(prepare_build "$PWD")
-         package_build "$buildpath"
+        buildpath=$(prepare_build "$PWD")
+        package_build "$buildpath"
 
 install= 
-         buildpath=$(builddir_path "$PWD")
-         package_install "$buildpath"
+        buildpath=$(builddir_path "$PWD")
+        package_install "$buildpath"
 
+update=
+        mr build
+        mr repoadd

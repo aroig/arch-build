@@ -2,11 +2,12 @@
 
 include=cat $AB2_ARCH_DIR/mrcommon
 
-update= aur_update "$PWD"
+fetch =
+        aur_update "$PWD"
 
 repoadd =
-         buildpath=$(builddir_path "$PWD")
-         package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/aur"
+        buildpath=$(builddir_path "$PWD")
+        package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/aur"
 
 [acroread]
 checkout=aur_checkout acroread
