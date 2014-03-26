@@ -5,6 +5,9 @@ include=cat $AB2_ARCH_DIR/mrcommon
 update= aur_update "$PWD"
 repoadd = repo_add "$PWD" "$AB2_VAR_DIR/arch/aur"
 
+[acroread]
+checkout=aur_checkout acroread
+
 [dropbox]
 checkout=aur_checkout dropbox
 
@@ -28,3 +31,4 @@ checkout=aur_checkout underscorejs
 
 [nodejs-mkdirp]
 checkout=aur_checkout nodejs-mkdirp
+

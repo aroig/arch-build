@@ -66,6 +66,10 @@ repoadd = repo_add "$PWD" "$AB2_VAR_DIR/arch/devel"
 
 [gnoti-dev]
 
+[grive-dev]
+
+[journal-triggerd-dev]
+
 [jq-dev]
 
 [linkchecker-dev]
@@ -76,6 +80,8 @@ repoadd = repo_add "$PWD" "$AB2_VAR_DIR/arch/devel"
 
 [makedict-dev]
 
+[mpdscribble-dev]
+
 [mr-dev]
 
 [msmtpq-dev]
@@ -83,6 +89,8 @@ repoadd = repo_add "$PWD" "$AB2_VAR_DIR/arch/devel"
 [mu-dev]
 
 [mutag-dev]
+
+[ncsvc-dev]
 
 [offlineimap-dev]
 
