@@ -123,7 +123,7 @@ lib=
         }
         built_package_file() {
             # built_package_file <path>
-            # echoes the full path of the newest built package in path
+            # echoes the full path of the last package (alphabetically) in path
             path="$1"
             find "$path" -maxdepth 1 -name \*.pkg.tar.xz | sort | tail -1            
         }
@@ -144,7 +144,7 @@ lib=
             # package_uptodate <path>
             # Check whether the package is up to date.
             path="$1"
-            [ "$(built_package_file $path)" == "$(pkgbuild_package_file $path)" ]
+            [ -f "$(pkgbuild_package_file $path)" ]
         }
         builddir_path() {
             # builddir_path <path>
@@ -181,7 +181,7 @@ lib=
             # Install a package.
             path="$1"
             pkgname=$(basename "$path")
-            pkgfile=$(built_package_file "$path")
+            pkgfile=$(pkgbuild_package_file "$path")
             if [ -f "$pkgfile" ]; then
                 sudo pacman --noconfirm -U "file://$pkgfile"               
             fi             
@@ -192,7 +192,7 @@ lib=
             path="$1"
             tgtrepo="$2"
             pkgname=$(basename "$path")
-            pkgfile=$(built_package_file "$path")
+            pkgfile=$(pkgbuild_package_file "$path")
             repodb=$(basename "$tgtrepo").db.tar.gz
             if [ -f "$pkgfile" ]; then
                 # clean older packages
