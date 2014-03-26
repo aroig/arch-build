@@ -66,6 +66,8 @@ repoadd = repo_add "$PWD" "$AB2_VAR_DIR/arch/devel"
 
 [gnoti-dev]
 
+[jq-dev]
+
 [linkchecker-dev]
 
 [lspp-dev]
@@ -84,9 +86,15 @@ repoadd = repo_add "$PWD" "$AB2_VAR_DIR/arch/devel"
 
 [offlineimap-dev]
 
+[openscad-dev]
+
 [pam-ssh-agent-auth-dev]
 
 [pass-dev]
+
+[paur-dev]
+
+[prooftree-dev]
 
 [python2-google-api-dev]
 
@@ -105,6 +113,8 @@ repoadd = repo_add "$PWD" "$AB2_VAR_DIR/arch/devel"
 [vimpager-dev]
 
 [vte3-dev]
+
+[xorg-launch-helper-dev]
 
 [zathura-dev]
 
