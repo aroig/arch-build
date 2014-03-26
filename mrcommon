@@ -14,6 +14,7 @@ lib=
         source_safe() {
             shopt -u extglob
             if ! source "$@"; then
+                # NOTE: if source fails this does not get executed
                 error "$(gettext "Failed to source %s")" "$1"
                 exit 1
             fi
@@ -138,13 +139,18 @@ lib=
                 fullver=$(get_full_version)
                 pkgarch=$(get_pkg_arch)
                 echo "$path/${pkgname}-${fullver}-${pkgarch}.pkg.tar.xz"
-            )         
+            )
         }
         package_uptodate() {
             # package_uptodate <path>
             # Check whether the package is up to date.
             path="$1"
-            [ -f "$(pkgbuild_package_file $path)" ]
+            pkgfile="$(pkgbuild_package_file $path)"
+            if [ -z "$pkgfile" ]; then
+                echo "An error occurred parsing the PKGBUILD"
+                exit 1
+            fi        
+            [ -f  "$pkgfile" ]
         }
         builddir_path() {
             # builddir_path <path>
