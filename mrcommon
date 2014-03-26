@@ -240,7 +240,9 @@ build=
         fi
 
 rebuild= 
-        buildpath=$(prepare_build "$PWD")
+        buildpath=$(builddir_path "$PWD")
+        [ -d "$buildpath" ] && rm -Rf "$buildpath"
+        buildpath=$(prepare_build "$PWD")        
         package_build "$buildpath"
 
 install= 
