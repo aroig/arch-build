@@ -7,3 +7,11 @@ repoadd = repo_add "$PWD" "$AB2_VAR_DIR/arch/abdo"
 [abdo-font-collection]
 
 [brother-hl2250dn]
+
+[emacs-docs]
+
+[git-contrib]
+
+[ttf-windows7]
+
+[zsh-docs]
