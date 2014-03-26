@@ -1,17 +1,16 @@
 [DEFAULT]
 
-include=cat $AB2_ARCH_DIR/mrcommon
 
-fetch =
-        aur_update "$PWD"
+fetch = 
+	aur_update "$PWD"
 
-repoadd =
-        buildpath=$(builddir_path "$PWD")
-        package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/aur"
+repoadd = 
+	buildpath=$(builddir_path "$PWD")
+	package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/aur"
 
 register = 
-       pkgname=$( basename "$PWD" )
-       mr config "$pkgname" checkout="aur_checkout $pkgname"
+	pkgname=$( basename "$PWD" )
+	mr config "$pkgname" checkout="aur_checkout $pkgname"
 
 
 [acroread]
@@ -44,3 +43,5 @@ checkout = aur_checkout underscorejs
 [nodejs-mkdirp]
 checkout = aur_checkout nodejs-mkdirp
 
+[lib32-pangox-compat]
+checkout = aur_checkout lib32-pangox-compat
