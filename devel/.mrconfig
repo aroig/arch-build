@@ -2,7 +2,9 @@
 
 include=cat $AB2_ARCH_DIR/mrcommon
 
-repoadd = repo_add "$PWD" "$AB2_VAR_DIR/arch/devel"
+repoadd = 
+         buildpath=$(builddir_path "$PWD")
+         package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/devel"
 
 [asym-dev]
 

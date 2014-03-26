@@ -3,70 +3,132 @@
 # ---------------------------------------------------------------------------- #
 
 lib=
+        builddir="$HOME/opt/arch/build"
+        if [ ! -d "$builddir" ]; then
+            echo "ERROR: build directory does not exist. Please create it."
+            echo "Path: $builddir"
+            exit 1
+        fi   
         # need to dereference symlinks, otherwise subtle crap may happen when building stuff.
         # for instance, emacs gets the autoloads paths wrong
-        builddir="$(readlink -f $HOME/opt/arch/build)"
+        builddir="$(readlink -f $builddir)"
         commit_if_changes() {
+            # commit_if_changes <path> <message>
+            # Commits changes to a repo if there are any, otherwise do nothing.
+            path="$1"
+            message="$2"
+            cd "$path"
             num=$(git status --porcelain | wc -l)
             if [[ $num -ge 1 ]]; then            
                 git add -A .
             fi
-      
             num=$(git status --porcelain | wc -l)
             if [[ $num -ge 1 ]]; then
-                git commit -m "$1 ($num files)"
+                git commit -m "$message ($num files)"
             fi
         }
         package_uptodate() {
+            # package_uptodate <path>
+            # Check whether the package is up to date.
             false
         }
-        package_build() {
+        newest_package() {
+            # newest_package <path>
+            # echoes the full path of the newest built package in path
+            path="$1"
+            find "$path" -maxdepth 1 -name \*.pkg.tar.xz | sort | tail -1            
+        }
+        builddir_path() {
+            # builddir_path <path>
+            # echoes the build directory path for a given package
+            path="$1"
             pkgname=$(basename "$1")
-            mkdir -p "$builddir"
-            rsync -avz --exclude=.git ./ "$builddir/$pkgname"
-            cd "$builddir/$pkgname"
+            echo "$builddir/$pkgname"           
+        }
+        prepare_build() {
+            # prepare_build <path>
+            # Prepares a package for building on the builddir
+            # returns the path where the building will occur
+            path="$1"
+            pkgbuild=$(builddir_path "$path")
+            rsync -avz --exclude=.git "$path/" "$pkgbuild/" > /dev/null
+            echo "$pkgbuild"            
+        }
+        package_build() {
+            # package_build <path>
+            # Build a package at the given directory.
+            path="$1"
+            cd "$path"
             makepkg -f --sign
         }
-        package_install() {
-            pkgname=$(basename "$1")
-            find "$builddir/$pkgname" -maxdepth 1 -name \*.pkg.tar.xz | \
-            while read pkg; do
-                sudo pacman --noconfirm -U "file://$pkg"
-            done            
+        package_download() {
+            # package_download <path>
+            # Download package sources.
+            path="$1"
+            cd "$path"
+            makepkg --nobuild
         }
-        repo_add() {
-            pkgname=$(basename "$1")
+        package_install() {
+            # package_install <path>
+            # Install a package.
+            path="$1"
+            pkgname=$(basename "$path")
+            pkgfile=$(newest_package "$path")
+            if [ -f "$pkgfile" ]; then
+                sudo pacman --noconfirm -U "file://$pkgfile"               
+            fi             
+        }
+        package_repoadd() {
+            # package_repoadd <path>
+            # Add package to the pacman repo and clean older versions of it.
+            path="$1"
             tgtrepo="$2"
-            find "$builddir/$pkgname" -maxdepth 1 -name \*.pkg.tar.xz | \
-            while read pkg; do
-                cp "$pkg" "$tgtrepo/"
-                cp "$pkg.sig" "$tgtrepo/"
-                repo-add -n "$tgtrepo/$(basename $tgtrepo).db.tar.gz" "$pkg"
-            done
+            pkgname=$(basename "$path")
+            pkgfile=$(newest_package "$path")
+            repodb=$(basename "$tgtrepo").db.tar.gz
+            if [ -f "$pkgfile" ]; then
+                # clean older packages
+                rm -f $tgtrepo/$pkgname-*.pkg.tar.xz{,.sig}
+                # copy package and signature
+                cp "$pkgfile" "$tgtrepo/"
+                cp "$pkgfile.sig" "$tgtrepo/"
+                repo-add -n "$tgtrepo/$repodb" "$pkgfile"
+            fi
         }
         aur_checkout() {
-            cower -d "$1"
-            cd "$1" && git init && git add -A . && git commit -m 'Initial commit'
+            # aur_checkout <pkgname>
+            # Checkout a PKGBUILD from AUR
+            pkgname="$1"
+            cower -df --ignorerepo "$pkgname"
+            cd "$pkgname" && git init && git add -A . && git commit -m 'Initial commit'
         }
         aur_update() {
-            # only update on branch master, to preserve possible local changes.
-            if [ ! $(git symbolic-ref HEAD 2>/dev/null) == 'refs/heads/master' ]; then
+            # aur_update <path>
+            # Update git repo with last PKGBUILD from AUR.                                   
+            path="$1"
+            pkgname=$(basename "$1")
+            # NOTE: only update on branch master, to preserve possible local changes.
+            if [ ! "$(git symbolic-ref HEAD 2>/dev/null)" == 'refs/heads/master' ]; then
                 echo "Not on branch master"
                 return 1
             fi              
-            pkgname=$(basename "$1")
-            cower -df "$pkgname" -t ..
-            commit_if_changes "Updated from AUR"
+            cower -df --ignorerepo "$pkgname" -t ..
+            commit_if_changes "$path" "Updated from AUR"
         }
 
 build= 
-       if package_uptodate "$PWD"; then
-          echo "Package is up to date. No need to rebuild."
-       else
-          package_build "$PWD"
-       fi
+         if package_uptodate "$PWD"; then
+             echo "Package is up to date. No need to rebuild."
+         else
+             buildpath=$(prepare_build "$PWD")
+             package_build "$buildpath"
+         fi
 
-rebuild= package_build "$PWD"
+rebuild= 
+         buildpath=$(prepare_build "$PWD")
+         package_build "$buildpath"
 
-install= package_install "$PWD"
+install= 
+         buildpath=$(builddir_path "$PWD")
+         package_install "$buildpath"
 
