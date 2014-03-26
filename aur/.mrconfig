@@ -29,6 +29,9 @@ checkout=aur_checkout python2-vobject
 [coffee-script]
 checkout=aur_checkout coffee-script
 
+[perl-term-extendedcolor]
+checkout=aur_checkout perl-term-extendedcolor
+
 [underscorejs]
 checkout=aur_checkout underscorejs
 
