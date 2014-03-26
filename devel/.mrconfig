@@ -41,12 +41,14 @@ repoadd =
 [connman-ui-dev]
 
 [coq-hott-dev]
+skip = true
 
 [cower-dev]
 
 [dwb-dev]
 
 [elinks-dev]
+skip = true
 
 [emacs-auctex-dev]
 
@@ -86,8 +88,6 @@ repoadd =
 
 [git-annex-dev]
 
-[git-contrib-dev]
-
 [gnoti-dev]
 
 [grive-dev]
@@ -95,6 +95,7 @@ repoadd =
 [journal-triggerd-dev]
 
 [jq-dev]
+skip = true
 
 [linkchecker-dev]
 
@@ -119,6 +120,7 @@ repoadd =
 [offlineimap-dev]
 
 [openscad-dev]
+skip = true
 
 [pam-ssh-agent-auth-dev]
 
@@ -137,6 +139,7 @@ repoadd =
 [slider-dev]
 
 [slim-dev]
+skip=true
 
 [termite-dev]
 
