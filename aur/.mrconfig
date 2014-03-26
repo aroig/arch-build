@@ -1,5 +1,5 @@
 [DEFAULT]
-
+include = cat "$AB2_ARCH_DIR/mrcommon"
 
 fetch = 
 	aur_update "$PWD"
@@ -11,7 +11,6 @@ repoadd =
 register = 
 	pkgname=$( basename "$PWD" )
 	mr config "$pkgname" checkout="aur_checkout $pkgname"
-
 
 [acroread]
 checkout = aur_checkout acroread

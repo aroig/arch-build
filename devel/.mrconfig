@@ -1,22 +1,8 @@
 [DEFAULT]
-
-include=cat $AB2_ARCH_DIR/mrcommon
-
-lib =
-        source_tree_paths() {
-            path="$1"
-            pkgbuild="$path/PKGBUILD"
-            (
-                cd "$path"
-                source_pkgbuild "$pkgbuild"
-                for src in "${source[@]}"; do
-                    echo "$src" | sed 's|^.*file://\(.*\)$|\1|'
-                done 
-            )
-        }
+include = cat "$AB2_ARCH_DIR/mrcommon"
 
 fetch = 
-        source_tree_paths "$PWD" |
+        pkgbuild_source_paths "$PWD" |
         while read src; do
             if [ -d "$src" ]; then
                 cd "$src"
@@ -27,6 +13,7 @@ fetch =
 repoadd = 
         buildpath=$(builddir_path "$PWD")
         package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/devel"
+
 
 [asym-dev]
 
@@ -139,7 +126,7 @@ skip = true
 [slider-dev]
 
 [slim-dev]
-skip=true
+skip = true
 
 [termite-dev]
 

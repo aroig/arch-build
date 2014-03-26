@@ -141,6 +141,17 @@ lib=
                 echo "$path/${pkgname}-${fullver}-${pkgarch}.pkg.tar.xz"
             )
         }
+        pkgbuild_source_paths() {
+            path="$1"
+            pkgbuild="$path/PKGBUILD"
+            (
+                cd "$path"
+                source_pkgbuild "$pkgbuild"
+                for src in "${source[@]}"; do
+                    echo "$src" | sed 's|^.*file://\(.*\)$|\1|'
+                done 
+            )
+        }
         package_uptodate() {
             # package_uptodate <path>
             # Check whether the package is up to date.
