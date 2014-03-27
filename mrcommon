@@ -250,7 +250,14 @@ lib=
 
 build= 
         buildpath=$(prepare_build "$PWD")
-        ( package_download "$buildpath" )  > /dev/null 2>&1 
+        pkgname=$(basename "$PWD")
+        reponame="$(basename $(dirname $PWD))"
+        # silent download for packages in devel
+        if [ "$reponame" == 'devel' ]; then
+            ( package_download "$buildpath" )  > /dev/null 2>&1 
+        else               
+            package_download "$buildpath"
+        fi               
         if package_uptodate "$buildpath"; then
             echo "Package is up to date. No need to rebuild."
         else
