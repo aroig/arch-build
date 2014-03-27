@@ -16,17 +16,19 @@ lib=
         commit_if_changes() {
             # commit_if_changes <path> <message>
             # Commits changes to a repo if there are any, otherwise do nothing.
-            path="$1"
-            message="$2"
-            cd "$path"
-            num=$(git status --porcelain | wc -l)
-            if [[ $num -ge 1 ]]; then            
-                git add -A .
-            fi
-            num=$(git status --porcelain | wc -l)
-            if [[ $num -ge 1 ]]; then
-                git commit -m "$message ($num files)"
-            fi
+            local srcpath="$1"
+            local message="$2"
+            (
+                cd "$srcpath"
+                local num=$(git status --porcelain | wc -l)
+                if [[ $num -ge 1 ]]; then            
+                    git add -A .
+                fi
+                local num=$(git status --porcelain | wc -l)
+                if [[ $num -ge 1 ]]; then
+                    git commit -m "$message ($num files)"
+                fi
+            )
         }
         pkgbuild_parse() {
             $archdir/pkgbuild-parse.sh "$@"
@@ -34,19 +36,19 @@ lib=
         pkgbuild_package_file() {
             # pkgbuild_package_file <path>
             # echoes the full path of the package a build will generate
-            path="$1"
-            pkgfile=$(pkgbuild_parse "$path/PKGBUILD" pkgfile)
-            echo "$path/$pkgfile"
+            local srcpath="$1"
+            pkgfile=$(pkgbuild_parse "$srcpath/PKGBUILD" pkgfile)
+            echo "$srcpath/$pkgfile"
         }
         pkgbuild_source_paths() {
-            path="$1"
-            pkgbuild_parse "$path/PKGBUILD" localsource
+            local srcpath="$1"
+            pkgbuild_parse "$srcpath/PKGBUILD" localsource
         }
         package_uptodate() {
             # package_uptodate <path>
             # Check whether the package is up to date.
-            path="$1"
-            pkgfile="$(pkgbuild_package_file $path)"
+            local srcpath="$1"
+            local pkgfile="$(pkgbuild_package_file $srcpath)"
             if [ -z "$pkgfile" ]; then
                 echo "An error occurred parsing the PKGBUILD"
                 exit 1
@@ -56,15 +58,15 @@ lib=
         builddir_path() {
             # builddir_path <path>
             # echoes the build directory path for a given package
-            path="$1"
-            pkgname=$(basename "$1")
+            local srcpath="$1"
+            local pkgname=$(basename "$1")
             echo "$builddir/$pkgname"           
         }
         check_package_directory () {
             # check_package_directory <path>
             # fail if path does not contain a PKGBUILD
-            path="$1" 
-            if [ ! -f "$path/PKGBUILD" ]; then
+            local srcpath="$1" 
+            if [ ! -f "$srcpath/PKGBUILD" ]; then
                 echo "Can't find a PKGBUILD in $1"
                 exit 1
             fi   
@@ -73,31 +75,46 @@ lib=
             # prepare_build <path>
             # Prepares a package for building on the builddir
             # returns the path where the building will occur
-            path="$1"
-            buildpath=$(builddir_path "$path")
-            rsync -avz --exclude=.git "$path/" "$buildpath/" > /dev/null
+            local srcpath="$1"
+            local buildpath=$(builddir_path "$srcpath")
+            rsync -avz --exclude=.git "$srcpath/" "$buildpath/" > /dev/null
             echo "$buildpath"            
+        }
+        pkgbuild_update() {
+            # pkgbuild_update_from_build <path>
+            # Updates the PKGBUILD from the one on the build dir (for updated version)
+            local srcpath="$1"
+            local buildpath=$(builddir_path "$srcpath")
+            if [ -f "$buildpath/PKGBUILD" ]; then
+                echo "Updating source PKGBUILD"
+                cp "$buildpath/PKGBUILD" "$srcpath/PKGBUILD"
+            fi 
+            commit_if_changes "$srcpath" "Updated PKGBULD"            
         }
         package_build() {
             # package_build <path>
             # Build a package at the given directory.
-            path="$1"
-            cd "$path"
-            makepkg -f --sign
+            local srcpath="$1"
+            (
+                cd "$srcpath"
+                makepkg -f --sign
+            )
         }
         package_download() {
             # package_download <path>
             # Download package sources.
-            path="$1"
-            cd "$path"
-            makepkg --nobuild
+            local srcpath="$1"
+            (
+                cd "$srcpath"
+                makepkg --nobuild
+            )            
         }
         package_install() {
             # package_install <path>
             # Install a package.
-            path="$1"
-            pkgname=$(basename "$path")
-            pkgfile=$(pkgbuild_package_file "$path")
+            local srcpath="$1"
+            local pkgname=$(basename "$srcpath")
+            local pkgfile=$(pkgbuild_package_file "$srcpath")
             if [ -f "$pkgfile" ]; then
                 sudo pacman --noconfirm -U "file://$pkgfile"               
             fi             
@@ -105,18 +122,20 @@ lib=
         package_install_deps() {
             # package_install_deps <path>
             # Install package deps.
-            path="$1"
-            cd "$path"
-            makepkg -s
+            local srcpath="$1"
+            (
+                cd "$srcpath"
+                makepkg -s
+            )
         }
         package_repoadd() {
             # package_repoadd <path>
             # Add package to the pacman repo and clean older versions of it.
-            path="$1"
-            tgtrepo="$2"
-            pkgname=$(basename "$path")
-            pkgfile=$(pkgbuild_package_file "$path")
-            repodb=$(basename "$tgtrepo").db.tar.gz
+            local srcpath="$1"
+            local tgtrepo="$2"
+            local pkgname=$(basename "$srcpath")
+            local pkgfile=$(pkgbuild_package_file "$srcpath")
+            local repodb=$(basename "$tgtrepo").db.tar.gz
             if [ -f "$pkgfile" ]; then
                 # clean older packages
                 rm -f $tgtrepo/$pkgname-*.pkg.tar.xz{,.sig}
@@ -129,39 +148,45 @@ lib=
         package_repodel() {
             # package_repodel <path>
             # Delete a package from the repo.
-            path="$1"
-            tgtrepo="$2"
-            pkgname=$(basename "$path")
-            repodb=$(basename "$tgtrepo").db.tar.gz
+            local srcpath="$1"
+            local tgtrepo="$2"
+            local pkgname=$(basename "$srcpath")
+            local repodb=$(basename "$tgtrepo").db.tar.gz
             rm -f $tgtrepo/$pkgname-*.pkg.tar.xz{,.sig}
             repo-remove "$tgtrepo/$repodb" "$pkgname"
         }
         aur_checkout() {
             # aur_checkout <pkgname>
             # Checkout a PKGBUILD from AUR
-            pkgname="$1"
+            local pkgname="$1"
             cower -df --ignorerepo "$pkgname"
-            cd "$pkgname" && git init && git add -A . && git commit -m 'Initial commit'
+            (
+                cd "$pkgname"
+                git init && \
+                git add -A . && \
+                git commit -m 'Initial commit'
+            )
         }
         aur_update() {
             # aur_update <path>
             # Update git repo with last PKGBUILD from AUR.                                   
-            path="$1"
-            pkgname=$(basename "$1")
+            local srcpath="$1"
+            local pkgname=$(basename "$1")
             # NOTE: only update on branch master, to preserve possible local changes.
             if [ ! "$(git symbolic-ref HEAD 2>/dev/null)" == 'refs/heads/master' ]; then
                 echo "Not on branch master"
                 return 1
             fi              
             cower -df --ignorerepo "$pkgname" -t ..
-            commit_if_changes "$path" "Updated from AUR"
+            commit_if_changes "$srcpath" "Updated from AUR"
         }
 
 build= 
-        check_package_directory "$PWD"
-        buildpath=$(prepare_build "$PWD")
-        pkgname=$(basename "$PWD")
-        reponame="$(basename $(dirname $PWD))"
+        srcpath="$PWD"
+        check_package_directory "$srcpath"
+        buildpath=$(prepare_build "$srcpath")
+        pkgname=$(basename "$srcpath")
+        reponame="$(basename $(dirname $srcpath))"
         # silent download for packages in devel
         if [ "$reponame" == 'devel' ]; then
             ( package_download "$buildpath" )  > /dev/null 2>&1 
@@ -173,35 +198,49 @@ build=
         else
             package_build "$buildpath"
         fi
+        if [ "$reponame" == 'devel' ]; then
+            pkgbuild_update "$srcpath"
+        fi
 
 rebuild= 
-        check_package_directory "$PWD"
-        buildpath=$(builddir_path "$PWD")
-        [ -d "$buildpath" ] && rm -Rf "$buildpath"
-            buildpath=$(prepare_build "$PWD")        
+        srcpath="$PWD"
+        check_package_directory "$srcpath"
+        buildpath=$(builddir_path "$srcpath")
+        reponame="$(basename $(dirname $srcpath))"
+        if [ -d "$buildpath" ]; then
+            rm -Rf "$buildpath"
+        fi
+        buildpath=$(prepare_build "$srcpath")        
         package_build "$buildpath"
+        if [ "$reponame" == 'devel' ]; then
+            pkgbuild_update "$srcpath"
+        fi
 
 repoadd =
-        check_package_directory "$PWD"
-        buildpath=$(builddir_path "$PWD")
+        srcpath="$PWD"
+        check_package_directory "$srcpath"
+        buildpath=$(builddir_path "$srcpath")
         repopath=$(dirname "$MR_REPO")
         reponame=$(basename "$repopath")
         package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/$reponame"
 
 repodel =
-        check_package_directory "$PWD"
-        buildpath=$(builddir_path "$PWD")
+        srcpath="$PWD"
+        check_package_directory "$srcpath"
+        buildpath=$(builddir_path "$srcpath")
         repopath=$(dirname "$MR_REPO")
         reponame=$(basename "$repopath")
         package_repodel "$buildpath" "$AB2_VAR_DIR/arch/$reponame"
 
 install= 
-        check_package_directory "$PWD"
-        buildpath=$(builddir_path "$PWD")
+        srcpath="$PWD"
+        check_package_directory "$srcpath"
+        buildpath=$(builddir_path "$srcpath")
         package_install "$buildpath"
 
 installdeps=
-        check_package_directory "$PWD"
+        srcpath="$PWD"
+        check_package_directory "$srcpath"
         package_install_deps "$buildpath"
 
 update=
