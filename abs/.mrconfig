@@ -10,6 +10,7 @@ lib =
             rsargs='-mrtv --no-motd --delete-after --no-p --no-o --no-g'
             rsync $rsargs $server::abs/{$arch,any}/$repo/ . || true
         }
+        
 
 repoadd =
         buildpath=$(builddir_path "$PWD")
@@ -35,3 +36,18 @@ update =
 [extra]
 
 [testing]
+
+[haskell-core]
+sync = 
+        cd "$MR_REPO"
+        cblrepo sync
+
+update =
+        if [ "$MR_REPO" == "$PWD" ]; then
+            cblrepo sync
+            cblrepo pkgbuild $(cblrepo build base|tail -n +2)
+        else     
+            pkgname=$(basename "$PWD")
+            cd "$MR_REPO"
+            cblrepo pkgbuild $pkgname           
+        fi
