@@ -2,102 +2,8 @@
 # Utility functions to handle arch linux package building and AUR downloads    #
 # ---------------------------------------------------------------------------- #
 
-# Some functions I stole from the pkgbuild script
 lib=
-        have_function() {
-	    declare -f "$1" >/dev/null
-        }
-        ##
-        #  usage : source_safe <pkgbuild>
-        #   desc : source a file safely
-        ##
-        source_safe() {
-            shopt -u extglob
-            if ! source "$@"; then
-                # NOTE: if source fails this does not get executed
-                error "$(gettext "Failed to source %s")" "$1"
-                exit 1
-            fi
-            shopt -s extglob
-        }
-        ##
-        #  usage : run_function_safe <func>
-        #   desc : run a function safely
-        ##
-        run_function_safe() {
-            local restoretrap
-            local pkgfunc="$1"
-            set -e
-            set -E
-            restoretrap=$(trap -p ERR)
-            trap 'error_function $pkgfunc' ERR
-            $pkgfunc
-            eval $restoretrap
-            set +E
-            set +e
-        }
-        ##
-        #  usage : source_pkgbuild <pkgbuild>
-        #   desc : source a PKGBUILD safely
-        ##
-        source_pkgbuild() {
-            pkgbuild="$1"
-            source_safe "$pkgbuild"
-            pkgbase=${pkgbase:-${pkgname[0]}}
-            srcdir="$path/src"
-            pkgdir="$path/pkg/$pkgbase"
-            epoch=${epoch:-0}
-        }
-        ##
-        #  usage : get_full_version <pkgname>
-        # return : full version spec, including epoch (if necessary), pkgver, pkgrel
-        ##
-        get_full_version() {
-            if [[ -z $1 ]]; then
-                if [[ $epoch ]] && (( ! $epoch )); then
-                    printf "%s\n" "$pkgver-$pkgrel"
-                else
-                    printf "%s\n" "$epoch:$pkgver-$pkgrel"
-                fi
-            else
-                for i in pkgver pkgrel epoch; do
-                    local indirect="${i}_override"
-                    eval $(declare -f package_$1 | sed -n "s/\(^[[:space:]]*$i=\)/${i}_override=/p")
-                    [[ -z ${!indirect} ]] && eval ${indirect}=\"${!i}\"
-                done
-                if (( ! $epoch_override )); then
-                    printf "%s\n" "$pkgver_override-$pkgrel_override"
-                else
-                    printf "%s\n" "$epoch_override:$pkgver_override-$pkgrel_override"
-                fi
-            fi
-        }
-        ##
-        #  usage : get_pkg_arch <pkgname>
-        # return : architecture of the package
-        ##
-        get_pkg_arch() {
-            CARCH=x86_64
-	    if [[ -z $1 ]]; then
-                if [[ $arch = "any" ]]; then
-                    printf "%s\n" "any"
-                else
-                    printf "%s\n" "$CARCH"
-                fi
-            else
-                local arch_override
-                eval $(declare -f package_$1 | sed -n 's/\(^[[:space:]]*arch=\)/arch_override=/p')
-                (( ${#arch_override[@]} == 0 )) && arch_override=("${arch[@]}")
-                if [[ $arch_override = "any" ]]; then
-                    printf "%s\n" "any"
-                else
-                    printf "%s\n" "$CARCH"
-                fi
-            fi
-        }
-
-
-lib=
+        archdir="$AB2_ARCH_DIR"
         builddir="$HOME/opt/arch/build"
         if [ ! -d "$builddir" ]; then
             echo "ERROR: build directory does not exist. Please create it."
@@ -122,35 +28,19 @@ lib=
                 git commit -m "$message ($num files)"
             fi
         }
-        built_package_file() {
-            # built_package_file <path>
-            # echoes the full path of the last package (alphabetically) in path
-            path="$1"
-            find "$path" -maxdepth 1 -name \*.pkg.tar.xz | sort | tail -1            
+        pkgbuild_parse() {
+            $archdir/pkgbuild-parse.sh "$@"
         }
         pkgbuild_package_file() {
             # pkgbuild_package_file <path>
             # echoes the full path of the package a build will generate
             path="$1"
-            pkgbuild="$path/PKGBUILD"
-            ( 
-                cd "$path"
-                source_pkgbuild "$pkgbuild"
-                fullver=$(get_full_version)
-                pkgarch=$(get_pkg_arch)
-                echo "$path/${pkgname}-${fullver}-${pkgarch}.pkg.tar.xz"
-            )
+            pkgfile=$(pkgbuild_parse "$path/PKGBUILD" pkgfile)
+            echo "$path/$pkgfile"
         }
         pkgbuild_source_paths() {
             path="$1"
-            pkgbuild="$path/PKGBUILD"
-            (
-                cd "$path"
-                source_pkgbuild "$pkgbuild"
-                for src in "${source[@]}"; do
-                    echo "$src" | sed 's|^.*file://\(.*\)$|\1|'
-                done 
-            )
+            pkgbuild_parse "$path/PKGBUILD" localsource
         }
         package_uptodate() {
             # package_uptodate <path>
@@ -280,3 +170,4 @@ installdeps=
 update=
         mr build
         mr repoadd
+
