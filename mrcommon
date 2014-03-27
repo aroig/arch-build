@@ -65,9 +65,9 @@ lib=
             # Prepares a package for building on the builddir
             # returns the path where the building will occur
             path="$1"
-            pkgbuild=$(builddir_path "$path")
-            rsync -avz --exclude=.git "$path/" "$pkgbuild/" > /dev/null
-            echo "$pkgbuild"            
+            buildpath=$(builddir_path "$path")
+            rsync -avz --exclude=.git "$path/" "$buildpath/" > /dev/null
+            echo "$buildpath"            
         }
         package_build() {
             # package_build <path>
