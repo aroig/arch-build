@@ -2,12 +2,13 @@
 include = cat "$AB2_ARCH_DIR/mrcommon"
 
 lib = 
+        syncserver="rsync.archlinux.org"
         rsync_abs() {
-            repo="$1"
+            server="$1"
+            repo="$2"
             arch="x86_64"
-            syncserver="rsync.archlinux.org"
             rsargs='-mrtv --no-motd --delete-after --no-p --no-o --no-g'
-            rsync $rsargs $syncserver::abs/{${arch},any}/$repo/ .
+            rsync $rsargs $server::abs/{$arch,any}/$repo/ . || true
         }
 
 repoadd =
@@ -18,20 +19,19 @@ repodel =
          buildpath=$(builddir_path "$PWD")
          package_repodel "$buildpath" "$AB2_VAR_DIR/arch/abs"
 
-update = 
-        reponame=$(basename "$PWD")
-        rsyc_abs $syncserver "$reponame"
-
+update =
+        reponame=$(basename $MR_REPO)
+        if [ "$MR_REPO" == "$PWD" ]; then
+            rsync_abs "$syncserver" "$reponame"
+        else     
+            pkgname=$(basename "$PWD")
+            rsync_abs "$syncserver" "$reponame/$pkgname"
+        fi
 
 [core]
-update = rsync_abs "core"
 
 [community]
-update = rsync_abs "community"
 
 [extra]
-update = rsync_abs "extra"
 
 [testing]
-update = rsync_abs "testing"
-        
