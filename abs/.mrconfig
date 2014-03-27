@@ -14,6 +14,10 @@ repoadd =
         buildpath=$(builddir_path "$PWD")
         package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/abs"
 
+repodel =
+         buildpath=$(builddir_path "$PWD")
+         package_repodel "$buildpath" "$AB2_VAR_DIR/arch/abs"
+
 update = 
         reponame=$(basename "$PWD")
         rsyc_abs $syncserver "$reponame"

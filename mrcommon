@@ -114,8 +114,18 @@ lib=
                 # copy package and signature
                 cp "$pkgfile" "$tgtrepo/"
                 cp "$pkgfile.sig" "$tgtrepo/"
-                repo-add -n "$tgtrepo/$repodb" "$pkgfile"
+                repo-add "$tgtrepo/$repodb" "$pkgfile"
             fi
+        }
+        package_repodel() {
+            # package_repodel <path>
+            # Delete a package from the repo.
+            path="$1"
+            tgtrepo="$2"
+            pkgname=$(basename "$path")
+            repodb=$(basename "$tgtrepo").db.tar.gz
+            rm -f $tgtrepo/$pkgname-*.pkg.tar.xz{,.sig}
+            repo-remove "$tgtrepo/$repodb" "$pkgname"
         }
         aur_checkout() {
             # aur_checkout <pkgname>
