@@ -2,6 +2,7 @@
 include = cat "$AB2_ARCH_DIR/mrcommon"
 
 fetch = 
+        check_package_directory "$PWD"
         pkgbuild_source_paths "$PWD" |
         while read src; do
             if [ -d "$src" ]; then
@@ -9,14 +10,6 @@ fetch =
                 mr update
             fi   
         done
-
-repoadd = 
-        buildpath=$(builddir_path "$PWD")
-        package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/devel"
-
-repodel =
-         buildpath=$(builddir_path "$PWD")
-         package_repodel "$buildpath" "$AB2_VAR_DIR/arch/devel"
 
 
 [asym-dev]

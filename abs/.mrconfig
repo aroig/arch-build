@@ -11,15 +11,6 @@ lib =
             rsync $rsargs $server::abs/{$arch,any}/$repo/ . || true
         }
         
-
-repoadd =
-        buildpath=$(builddir_path "$PWD")
-        package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/abs"
-
-repodel =
-         buildpath=$(builddir_path "$PWD")
-         package_repodel "$buildpath" "$AB2_VAR_DIR/arch/abs"
-
 update =
         reponame=$(basename $MR_REPO)
         if [ "$MR_REPO" == "$PWD" ]; then

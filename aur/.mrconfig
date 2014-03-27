@@ -2,17 +2,11 @@
 include = cat "$AB2_ARCH_DIR/mrcommon"
 
 fetch = 
+        check_package_directory "$PWD"
 	aur_update "$PWD"
 
-repoadd = 
-	buildpath=$(builddir_path "$PWD")
-	package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/aur"
-
-repodel =
-         buildpath=$(builddir_path "$PWD")
-         package_repodel "$buildpath" "$AB2_VAR_DIR/arch/aur"
-
 register = 
+        check_package_directory "$PWD"
 	pkgname=$( basename "$PWD" )
 	mr config "$pkgname" checkout="aur_checkout $pkgname"
 

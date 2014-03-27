@@ -60,6 +60,15 @@ lib=
             pkgname=$(basename "$1")
             echo "$builddir/$pkgname"           
         }
+        check_package_directory () {
+            # check_package_directory <path>
+            # fail if path does not contain a PKGBUILD
+            path="$1" 
+            if [ ! -f "$path/PKGBUILD" ]; then
+                echo "Can't find a PKGBUILD in $1"
+                exit 1
+            fi   
+        }
         prepare_build() {
             # prepare_build <path>
             # Prepares a package for building on the builddir
@@ -149,6 +158,7 @@ lib=
         }
 
 build= 
+        check_package_directory "$PWD"
         buildpath=$(prepare_build "$PWD")
         pkgname=$(basename "$PWD")
         reponame="$(basename $(dirname $PWD))"
@@ -165,16 +175,33 @@ build=
         fi
 
 rebuild= 
+        check_package_directory "$PWD"
         buildpath=$(builddir_path "$PWD")
         [ -d "$buildpath" ] && rm -Rf "$buildpath"
-        buildpath=$(prepare_build "$PWD")        
+            buildpath=$(prepare_build "$PWD")        
         package_build "$buildpath"
 
+repoadd =
+        check_package_directory "$PWD"
+        buildpath=$(builddir_path "$PWD")
+        repopath=$(dirname "$MR_REPO")
+        reponame=$(basename "$repopath")
+        package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/$reponame"
+
+repodel =
+        check_package_directory "$PWD"
+        buildpath=$(builddir_path "$PWD")
+        repopath=$(dirname "$MR_REPO")
+        reponame=$(basename "$repopath")
+        package_repodel "$buildpath" "$AB2_VAR_DIR/arch/$reponame"
+
 install= 
+        check_package_directory "$PWD"
         buildpath=$(builddir_path "$PWD")
         package_install "$buildpath"
 
 installdeps=
+        check_package_directory "$PWD"
         package_install_deps "$buildpath"
 
 update=
