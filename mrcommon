@@ -13,9 +13,11 @@ lib=
         # need to dereference symlinks, otherwise subtle crap may happen when building stuff.
         # for instance, emacs gets the autoloads paths wrong
         builddir="$(readlink -f "$builddir")"
+        ##                     
+        # commit_if_changes <path> <message>
+        # Commits changes to a repo if there are any, otherwise do nothing.
+        ##
         commit_if_changes() {
-            # commit_if_changes <path> <message>
-            # Commits changes to a repo if there are any, otherwise do nothing.
             local srcpath="$(readlink -f "$1")"
             local message="$2"
             (
@@ -30,23 +32,36 @@ lib=
                 fi
             )
         }
+        ## 
+        # pkgbuild_parse <path> <element>
+        # Parse a pkgbuild file and return the given <element>
+        ##
         pkgbuild_parse() {
             $archdir/bin/pkgbuild-parse.sh "$@"
         }
+        ##
+        # pkgbuild_package_file <path>
+        # Return the package file a PKGBUILD will produce. May need
+        # access to sources in order to compute the version
+        ##
         pkgbuild_package_file() {
-            # pkgbuild_package_file <path>
-            # echoes the full path of the package a build will generate
             local srcpath="$(readlink -f "$1")"
             pkgfile="$(pkgbuild_parse "$srcpath/PKGBUILD" pkgfile)"
             echo "$srcpath/$pkgfile"
         }
+        ##
+        # pkgbuild_source_paths <path>
+        # List sources from the PKGBUILD
+        ##
         pkgbuild_source_paths() {
             local srcpath="$(readlink -f "$1")"
             pkgbuild_parse "$srcpath/PKGBUILD" localsource
         }
+        ##
+        # package_uptodate <path>
+        # Check whether the package is up to date or needs building
+        ##
         package_uptodate() {
-            # package_uptodate <path>
-            # Check whether the package is up to date.
             local srcpath="$(readlink -f "$1")"
             local pkgfile="$(pkgbuild_package_file $srcpath)"
             if [ -z "$pkgfile" ]; then
@@ -55,41 +70,51 @@ lib=
             fi        
             [ -f  "$pkgfile" ]
         }
+        ## 
+        # package_repo <path>
+        # Get the repo a package belongs
+        ##
         package_repo() {
-            # package_repo <path>
-            # Get the repo a package belongs
             local srcpath="$(readlink -f "$1")"            
             local srcdir="$(dirname "$srcpath")"
             echo "$(basename "$srcdir")"
         }
+        ##
+        # builddir_path <path>
+        # Get the path of the directory where the package will be built.
+        ##
         builddir_path() {
-            # builddir_path <path>
-            # echoes the build directory path for a given package
             local srcpath="$(readlink -f "$1")"
             local pkgname="$(basename "$srcpath")"
             echo "$builddir/$pkgname"           
         }
+        ##
+        # check_package_directory <path>
+        # Fail if path does not contain a PKGBUILD
+        ##
         check_package_directory () {
-            # check_package_directory <path>
-            # fail if path does not contain a PKGBUILD
             local srcpath="$(readlink -f "$1")" 
             if [ ! -f "$srcpath/PKGBUILD" ]; then
                 echo "Can't find a PKGBUILD in $1"
                 exit 1
             fi   
         }
+        ##
+        # prepare_build <path>
+        # Prepares a package for building on the builddir
+        # returns the path where the building will occur
+        ##
         prepare_build() {
-            # prepare_build <path>
-            # Prepares a package for building on the builddir
-            # returns the path where the building will occur
             local srcpath="$(readlink -f "$1")"
             local buildpath="$(builddir_path "$srcpath")"
             rsync -avz --exclude=.git "$srcpath/" "$buildpath/" > /dev/null
             echo "$buildpath"            
         }
+        ##
+        # pkgbuild_update_from_build <path>
+        # Updates the PKGBUILD from the one on the build dir (for updated version)
+        ##
         pkgbuild_update() {
-            # pkgbuild_update_from_build <path>
-            # Updates the PKGBUILD from the one on the build dir (for updated version)
             local srcpath="$(readlink -f "$1")"
             local buildpath="$(builddir_path "$srcpath")"
             if [ -f "$buildpath/PKGBUILD" ]; then
@@ -98,9 +123,11 @@ lib=
             fi 
             commit_if_changes "$srcpath" "Updated PKGBULD"            
         }
+        ##
+        # pkgbuild_bump <path>
+        # Bump the pkgrel
+        ##
         pkgbuild_bump() {
-            # pkgbuild_bump <path>
-            # Bump the pkgrel
             local srcpath="$(readlink -f "$1")"
             local pkgbuild="$srcpath/PKGBUILD"            
             if [ -f "$pkgbuild" ]; then
@@ -111,27 +138,33 @@ lib=
                 commit_if_changes "$srcpath" "Bump pkgrel"            
             fi
         }
+        ##
+        # package_build <path>
+        # Build a package at the given directory.
+        ##
         package_build() {
-            # package_build <path>
-            # Build a package at the given directory.
             local srcpath="$(readlink -f "$1")"
             (
                 cd "$srcpath"
                 makepkg -f --sign
             )
         }
+        ##
+        # package_download <path>
+        # Download package sources.
+        ##
         package_download() {
-            # package_download <path>
-            # Download package sources.
             local srcpath="$(readlink -f "$1")"
             (
                 cd "$srcpath"
                 makepkg --nobuild
             )            
         }
+        ##
+        # package_install <path>
+        # Install a package.
+        ##
         package_install() {
-            # package_install <path>
-            # Install a package.
             local srcpath="$(readlink -f "$1")"
             local pkgname="$(basename "$srcpath")"
             local pkgfile="$(pkgbuild_package_file "$srcpath")"
@@ -139,18 +172,22 @@ lib=
                 sudo pacman --noconfirm -U "file://$pkgfile"               
             fi             
         }
+        ##
+        # package_install_deps <path>
+        # Install package deps.
+        ##
         package_install_deps() {
-            # package_install_deps <path>
-            # Install package deps.
             local srcpath="$(readlink -f "$1")"
             (
                 cd "$srcpath"
                 makepkg -s
             )
         }
+        ##
+        # package_repoadd <path>
+        # Add package to the pacman repo and clean older versions of it.
+        ##
         package_repoadd() {
-            # package_repoadd <path>
-            # Add package to the pacman repo and clean older versions of it.
             local srcpath="$(readlink -f "$1")"
             local tgtrepo="$2"
             local pkgname="$(basename "$srcpath")"
@@ -175,9 +212,11 @@ lib=
             rm -f $tgtrepo/$pkgname-*.pkg.tar.xz{,.sig}
             repo-remove "$tgtrepo/$repodb" "$pkgname"
         }
+        ##
+        # aur_checkout <pkgname>
+        # Checkout a PKGBUILD from AUR
+        ##
         aur_checkout() {
-            # aur_checkout <pkgname>
-            # Checkout a PKGBUILD from AUR
             local pkgname="$1"
             cower -df --ignorerepo "$pkgname"
             (
@@ -187,9 +226,11 @@ lib=
                 git commit -m 'Initial commit'
             )
         }
+        ##
+        # aur_update <path>
+        # Update git repo with last PKGBUILD from AUR.                                   
+        ##
         aur_update() {
-            # aur_update <path>
-            # Update git repo with last PKGBUILD from AUR.                                   
             local srcpath="$(readlink -f "$1")"
             local pkgname="$(basename "$srcpath")"
             # NOTE: only update on branch master, to preserve possible local changes.
@@ -207,7 +248,6 @@ build=
         buildpath="$(prepare_build "$srcpath")"
         pkgname="$(basename "$srcpath")"
         reponame="$(package_repo "$srcpath")"
-        # silent download for packages in devel
         if [ "$reponame" == 'devel' ]; then
             ( package_download "$buildpath" )  > /dev/null 2>&1 
         else               
