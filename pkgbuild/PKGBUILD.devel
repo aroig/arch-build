@@ -1,18 +1,18 @@
 # Mantainer: Abdó Roig-Maranges <abdo.roig@gmail.com>
 
-pkgname=name-dev
+pkgname=@pkgname@-dev
 pkgver=0.1
 pkgrel=1
-pkgdesc="A host synchronizer"
+pkgdesc="A description"
 arch=('i686' 'x86_64')
 license=('GPL3')
-provides=('name')
-conflicts=('name')
+provides=('@pkgname@')
+conflicts=('@pkgname@' '@pkgname@-git')
 depends=()
 makedepends=('git' 'make')
 optdepends=()
 
-source=($pkgname::"git+file://$AB2_DEVEL_DIR/linux/name")
+source=($pkgname::"git+file://$AB2_DEVEL_DIR/linux/@pkgname@")
 md5sums=('SKIP')
 
 pkgver() {
