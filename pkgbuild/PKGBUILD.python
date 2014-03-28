@@ -1,0 +1,33 @@
+# Mantainer: Abdó Roig-Maranges <abdo.roig@gmail.com>
+
+pkgname=name-dev
+pkgver=0.1
+pkgrel=1
+pkgdesc="A host synchronizer"
+arch=('i686' 'x86_64')
+license=('GPL3')
+provides=('name')
+conflicts=('name')
+depends=('python')
+makedepends=('git' 'make' 'python-docutils')
+optdepends=()
+
+source=($pkgname::"git+file://$AB2_DEVEL_DIR/linux/name")
+md5sums=('SKIP')
+
+pkgver() {
+    git --git-dir="$srcdir/$pkgname/.git" ver
+}
+
+build() {
+    cd "$srcdir/$pkgname"
+    make clean
+    SHEBANG=/usr/bin/python3 make
+}
+
+package() {
+    cd "$srcdir/$pkgname"
+    make DESTDIR="$pkgdir" install
+}
+
+# vim: expandtab:shiftwidth=4:tabstop=4:softtabstop=4:textwidth=80
