@@ -109,13 +109,6 @@ case $action in
         done
         ;;
 
-    localsource)
-        for src in "${source[@]}"; do
-            srcclean=$(echo "$src" | sed 's|^.*file://\(.*\)$|\1|')
-            [ -d "$srcclean" ] && echo "$srcclean"            
-        done
-        ;;
-
     *)
         eval "echo \${$action}"
 esac

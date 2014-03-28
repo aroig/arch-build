@@ -50,12 +50,12 @@ lib=
             echo "$srcpath/$pkgfile"
         }
         ##
-        # pkgbuild_source_paths <path>
+        # pkgbuild_sources <path>
         # List sources from the PKGBUILD
         ##
-        pkgbuild_source_paths() {
+        pkgbuild_sources() {
             local srcpath="$(readlink -f "$1")"
-            pkgbuild_parse "$srcpath/PKGBUILD" localsource
+            pkgbuild_parse "$srcpath/PKGBUILD" source
         }
         ##
         # package_uptodate <path>
