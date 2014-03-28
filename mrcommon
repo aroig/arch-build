@@ -317,15 +317,16 @@ install=
         buildpath="$(builddir_path "$srcpath")"
         package_install "$buildpath"
 
+installdeps=
+        srcpath="$PWD"
+        check_package_directory "$srcpath"
+        buildpath="$(builddir_path "$srcpath")"
+        package_install_deps "$buildpath"
+
 bump=
         srcpath="$PWD"
         check_package_directory "$srcpath"
         pkgbuild_bump "$srcpath"
-
-installdeps=
-        srcpath="$PWD"
-        check_package_directory "$srcpath"
-        package_install_deps "$buildpath"
 
 update=
         mr build
