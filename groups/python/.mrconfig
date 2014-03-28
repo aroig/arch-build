@@ -29,6 +29,6 @@ include = cat "$AB2_ARCH_DIR/mrcommon"
 
 [python2-google-api-dev]
 
-[python2-pycu]
+[python2-pyicu]
 
 [python2-vobject]
