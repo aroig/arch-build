@@ -91,6 +91,19 @@ lib=
             fi 
             commit_if_changes "$srcpath" "Updated PKGBULD"            
         }
+        pkgbuild_bump() {
+            # pkgbuild_bump <path>
+            # Bump the pkgrel
+            local srcpath="$1"
+            local pkgbuild="$srcpath/PKGBUILD"            
+            if [ -f "$pkgbuild" ]; then
+                local pkgrel=$(pkgbuild_parse "$pkgbuild" pkgrel)
+                local pkgrel=`expr $pkgrel + 1`
+                echo "Bumping pkgrel: $pkgrel"
+                sed -i s/pkgrel=.*$/pkgrel=$pkgrel/ "$pkgbuild"
+                commit_if_changes "$srcpath" "Bump pkgrel"            
+            fi
+        }
         package_build() {
             # package_build <path>
             # Build a package at the given directory.
@@ -237,6 +250,11 @@ install=
         check_package_directory "$srcpath"
         buildpath=$(builddir_path "$srcpath")
         package_install "$buildpath"
+
+bump=
+        srcpath="$PWD"
+        check_package_directory "$srcpath"
+        pkgbuild_bump "$srcpath"
 
 installdeps=
         srcpath="$PWD"
