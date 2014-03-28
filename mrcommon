@@ -31,7 +31,7 @@ lib=
             )
         }
         pkgbuild_parse() {
-            $archdir/pkgbuild-parse.sh "$@"
+            $archdir/bin/pkgbuild-parse.sh "$@"
         }
         pkgbuild_package_file() {
             # pkgbuild_package_file <path>
