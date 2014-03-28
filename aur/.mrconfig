@@ -2,11 +2,11 @@
 include = cat "$AB2_ARCH_DIR/mrcommon"
 
 fetch = 
-        check_package_directory "$PWD"
+	       check_package_directory "$PWD"
 	aur_update "$PWD"
 
 register = 
-        check_package_directory "$PWD"
+	       check_package_directory "$PWD"
 	pkgname=$( basename "$PWD" )
 	mr config "$pkgname" checkout="aur_checkout $pkgname"
 
