@@ -180,7 +180,7 @@ lib=
             local srcpath="$(readlink -f "$1")"
             (
                 cd "$srcpath"
-                makepkg -s
+                makepkg -s --nobuild --noextract --skipinteg
             )
         }
         ##
