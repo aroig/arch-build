@@ -213,17 +213,38 @@ lib=
             repo-remove "$tgtrepo/$repodb" "$pkgname"
         }
         ##
-        # aur_checkout <pkgname>
+        # pkgbuild_checkout <path> <template>
+        # Checkout a PKGBUILD from a template
+        ##
+        pkgbuild_checkout() {
+            local srcpath="$1"
+            local pkgname="$(basename "$srcpath")"
+            local template="$AB2_ARCH_DIR/pkgbuild/$template/PKGBUILD.$2"
+            if [ ! -f "$template" ]; then
+                echo "There is no $(basename $template) template"
+                exit 1
+            fi 
+            mkdir "$pkgname"
+            (
+                cd "$pkgname"
+                cp "$template" PKGBUILD
+                sed -i "s/@pkgname@/${pkgname%-dev}/g" PKGBUILD
+                git init
+                commit_if_changes "$srcpath" 'Initial commit'
+            )
+        }
+        ##
+        # aur_checkout <path>
         # Checkout a PKGBUILD from AUR
         ##
         aur_checkout() {
-            local pkgname="$1"
+            local srcpath="$1"
+            local pkgname="$(basename "$srcpath")"
             cower -df --ignorerepo "$pkgname"
             (
                 cd "$pkgname"
-                git init && \
-                git add -A . && \
-                git commit -m 'Initial commit'
+                git init
+                commit_if_changed "$srcpath" 'Initial commit'
             )
         }
         ##

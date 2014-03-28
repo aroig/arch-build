@@ -11,6 +11,8 @@ fetch =
             fi   
         done
 
+checkout = pkgbuild_checkout "$MR_REPO" "$1"
+        
 
 [asym-dev]
 
@@ -138,3 +140,5 @@ skip = true
 [zathura-dev]
 
 [zathura-plugins-dev]
+
+[mplugd-dev]
