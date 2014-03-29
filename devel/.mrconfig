@@ -140,9 +140,6 @@ skip = true
 
 [slider-dev]
 
-[slim-dev]
-skip = true
-
 [termite-dev]
 
 [texa-dev]
