@@ -150,6 +150,17 @@ lib=
             )
         }
         ##
+        # package_repackage <path>
+        # Repackage a package at the given directory.
+        ##
+        package_repackage() {
+            local srcpath="$(readlink -f "$1")"
+            (
+                cd "$srcpath"
+                makepkg -f --repackage --sign
+            )
+        }
+        ##
         # package_download <path>
         # Download package sources.
         ##
@@ -293,6 +304,16 @@ rebuild=
         fi
         buildpath="$(prepare_build "$srcpath")"
         package_build "$buildpath"
+        if [ "$reponame" == 'devel' ]; then
+            pkgbuild_update "$srcpath"
+        fi
+
+repackage= 
+        srcpath="$PWD"
+        check_package_directory "$srcpath"
+        buildpath="$(builddir_path "$srcpath")"
+        reponame="$(package_repo "$srcpath")"
+        package_repackage "$buildpath"
         if [ "$reponame" == 'devel' ]; then
             pkgbuild_update "$srcpath"
         fi
