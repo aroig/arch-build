@@ -3,6 +3,7 @@ abs/*
 aur/*
 devel/*
 mingw/*
+TODO
 *~
 .\#*
 !.mrconfig
