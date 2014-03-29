@@ -120,7 +120,6 @@ skip = true
 [offlineimap-dev]
 
 [openscad-dev]
-skip = true
 
 [pam-ssh-agent-auth-dev]
 
