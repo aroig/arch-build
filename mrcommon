@@ -311,7 +311,7 @@ rebuild=
 repackage= 
         srcpath="$PWD"
         check_package_directory "$srcpath"
-        buildpath="$(builddir_path "$srcpath")"
+        buildpath="$(prepare_build "$srcpath")"
         reponame="$(package_repo "$srcpath")"
         package_repackage "$buildpath"
         if [ "$reponame" == 'devel' ]; then
