@@ -32,3 +32,5 @@ include = cat "$AB2_ARCH_DIR/mrcommon"
 [python2-pyicu]
 
 [python2-vobject]
+
+[python-sexpdata-dev]
