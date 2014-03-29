@@ -1,3 +1,16 @@
 
+[abdo]
+chain = true
+
+[abs]
+chain = true
+
+[aur]
+chain = true
+
+[devel]
+chain = true
+
 [mirrors]
 update = curl https://www.archlinux.org/mirrorlist/all/ > mirrorlist
+
