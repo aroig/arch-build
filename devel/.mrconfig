@@ -86,12 +86,16 @@ skip = true
 
 [gnoti-dev]
 
+[gnupg-dev]
+
 [grive-dev]
 
 [journal-triggerd-dev]
 
 [jq-dev]
 skip = true
+
+[ledger-dev]
 
 [linkchecker-dev]
 
@@ -125,6 +129,8 @@ skip = true
 [paur-dev]
 
 [prooftree-dev]
+
+[python-sexpdata-dev]
 
 [python2-google-api-dev]
 
