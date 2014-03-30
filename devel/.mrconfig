@@ -120,6 +120,7 @@ skip = true
 [offlineimap-dev]
 
 [openscad-dev]
+skip = true
 
 [pam-ssh-agent-auth-dev]
 
@@ -154,3 +155,4 @@ skip = true
 [zathura-plugins-dev]
 
 [mplugd-dev]
+skip = true
