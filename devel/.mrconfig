@@ -156,3 +156,5 @@ skip = true
 
 [mplugd-dev]
 skip = true
+
+[tmux-dev]
