@@ -122,6 +122,8 @@ skip = true
 [openscad-dev]
 skip = true
 
+[opensc-dev]
+
 [pam-ssh-agent-auth-dev]
 
 [pass-dev]
