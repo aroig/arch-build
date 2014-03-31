@@ -124,6 +124,8 @@ skip = true
 
 [opensc-dev]
 
+[orgmk-dev]
+
 [pam-ssh-agent-auth-dev]
 
 [pass-dev]
