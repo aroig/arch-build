@@ -87,6 +87,7 @@ skip = true
 [gnoti-dev]
 
 [gnupg-dev]
+skip=true
 
 [grive-dev]
 
