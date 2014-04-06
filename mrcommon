@@ -259,7 +259,7 @@ lib=
             (
                 cd "$pkgname"
                 git init
-                commit_if_changed "$srcpath" 'Initial commit'
+                commit_if_changes "$srcpath" 'Initial commit'
             )
         }
         ##
