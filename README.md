@@ -20,8 +20,7 @@ be installed with `pacman -Sy`.
 - `bin/`: some useful scripts.
 - `devel/`: everything I build from git goes here.
 - `groups/`: symlinks to several groups of packages. eg. python ones.
-- `issue/`: a nice arch issue for the tty.
-- `mingw/`:
+- `mingw/`: mingw cross compiler tools and libs
 - `mirrors/`: mirrirlist files.
 - `pkgbuild/`: some PKGBUILD templates I use.
 - `mrcommon`: the main code for the new mr actions.
