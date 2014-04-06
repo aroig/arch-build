@@ -1,5 +1,7 @@
 [DEFAULT]
-include = cat "$AB2_ARCH_DIR/mrcommon"
+include = 
+        mrcommonpath="$(dirname "$MR_CONFIG")/../mrcommon"
+        cat "$(realpath "$mrcommonpath")"
 
 fetch = 
 	check_package_directory "$PWD"

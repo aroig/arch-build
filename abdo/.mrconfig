@@ -1,5 +1,8 @@
 [DEFAULT]
-include = cat "$AB2_ARCH_DIR/mrcommon"
+include = 
+        mrcommonpath="$(dirname "$MR_CONFIG")/../mrcommon"
+        cat "$(realpath "$mrcommonpath")"
+
 
 [abdo-font-collection]
 
