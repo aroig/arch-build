@@ -23,12 +23,16 @@ update =
         fi
 
 [core]
+checkout = rsync_abs "$syncserver" core
 
 [community]
+checkout = rsync_abs "$syncserver" community
 
 [extra]
+checkout = rsync_abs "$syncserver" extra
 
 [testing]
+checkout = rsync_abs "$syncserver" testing
 
 [haskell-core]
 checkout = git clone 'https://github.com/archhaskell/habs.git' 'haskell-core'
