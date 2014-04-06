@@ -3,8 +3,12 @@
 # ---------------------------------------------------------------------------- #
 
 lib=
+        # Configuring paths
         archdir="$AB2_ARCH_DIR"
         builddir="$HOME/opt/arch/build"
+        repodir="$AB2_VAR_DIR/arch"
+        pkgbuilddir="$AB2_ARCH_DIR/pkgbuild"
+        # Error out if builddir does not exist
         if [ ! -d "$builddir" ]; then
             echo "ERROR: build directory does not exist. Please create it."
             echo "Path: $builddir"
@@ -230,7 +234,7 @@ lib=
         pkgbuild_checkout() {
             local srcpath="$1"
             local pkgname="$(basename "$srcpath")"
-            local template="$AB2_ARCH_DIR/pkgbuild/$template/PKGBUILD.$2"
+            local template="$pkgbuildir/$template/PKGBUILD.$2"
             if [ ! -f "$template" ]; then
                 echo "There is no $(basename $template) template"
                 exit 1
@@ -323,14 +327,14 @@ repoadd =
         check_package_directory "$srcpath"
         buildpath="$(builddir_path "$srcpath")"
         reponame="$(package_repo "$MR_REPO")"
-        package_repoadd "$buildpath" "$AB2_VAR_DIR/arch/$reponame"
+        package_repoadd "$buildpath" "$repodir/$reponame"
 
 repodel =
         srcpath="$PWD"
         check_package_directory "$srcpath"
         buildpath="$(builddir_path "$srcpath")"
         reponame="$(package_repo "$MR_REPO")"
-        package_repodel "$buildpath" "$AB2_VAR_DIR/arch/$reponame"
+        package_repodel "$buildpath" "$repodir/$reponame"
 
 install= 
         srcpath="$PWD"
