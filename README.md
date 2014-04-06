@@ -26,6 +26,17 @@ be installed with `pacman -Sy`.
 - `mrcommon`: the main code for the new mr actions.
 
 
+
+## Configuration
+
+There are some paths to be configured in `mrcommon`.
+- `archdir`: absolute path to the root of this mr tree
+- `builddir`: absolute path to where we will compile the code
+- `repodir`: absolute path to where we will build the pacman local repos
+- `pkgbuilddir`: absolute path to where the PKGBUILD templates are
+
+
+
 ## mr commands
 
 - build a package if it needs building
