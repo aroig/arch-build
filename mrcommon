@@ -327,6 +327,7 @@ repoadd =
         check_package_directory "$srcpath"
         buildpath="$(builddir_path "$srcpath")"
         reponame="$(package_repo "$MR_REPO")"
+        mkdir -p "$repodir/$reponame"
         package_repoadd "$buildpath" "$repodir/$reponame"
 
 repodel =
