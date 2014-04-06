@@ -14,12 +14,12 @@ be installed with `pacman -Sy`.
 
 ## Overview
 
-- `abdo/`: 
 - `abs/`: I download arch abs and haskell-core PKGBUILD's in here.
 - `aur/`: I pull PKGBUILDs from AUR here before building. I use [cower](https://github.com/falconindy/cower) for that.
 - `bin/`: some useful scripts.
 - `devel/`: everything I build from git goes here.
 - `groups/`: symlinks to several groups of packages. eg. python ones.
+- `misc/`: packages not fitting anywere else. binaries, or fonts, or whatever.
 - `mingw/`: mingw cross compiler tools and libs
 - `mirrors/`: mirrirlist files.
 - `pkgbuild/`: some PKGBUILD templates I use.
