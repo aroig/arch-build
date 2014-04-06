@@ -29,6 +29,7 @@ update =
 [testing]
 
 [haskell-core]
+checkout = git clone 'https://github.com/archhaskell/habs.git' 'haskell-core'
 sync = 
         cd "$MR_REPO"
         cblrepo sync
