@@ -1,9 +1,11 @@
-abdo/*
+misc/*
 abs/*
 aur/*
 devel/*
 mingw/*
 TODO
+build
+repos
 *~
 .\#*
 !.mrconfig

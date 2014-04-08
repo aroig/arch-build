@@ -5,9 +5,9 @@
 lib=
         # Configuring paths
         archdir="$AB2_ARCH_DIR"
-        builddir="$HOME/opt/arch/build"
-        repodir="$AB2_VAR_DIR/arch"
-        pkgbuilddir="$AB2_ARCH_DIR/pkgbuild"
+        builddir="$archdir/build"
+        repodir="$archdir/repos"
+        pkgbuilddir="$archdir/pkgbuild"
         # Error out if builddir does not exist
         if [ ! -d "$builddir" ]; then
             echo "ERROR: build directory does not exist. Please create it."
