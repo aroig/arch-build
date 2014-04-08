@@ -14,9 +14,10 @@ lib=
             echo "Path: $builddir"
             exit 1
         fi   
-        # need to dereference symlinks, otherwise subtle crap may happen when building stuff.
-        # for instance, emacs gets the autoloads paths wrong
+        # need to dereference symlinks! Otherwise subtle crap may happen when
+        #  building stuff. For instance, emacs gets the autoloads paths wrong
         builddir="$(readlink -f "$builddir")"
+        repodir="$(readlink -f "$repodir")"
         ##                     
         # commit_if_changes <path> <message>
         # Commits changes to a repo if there are any, otherwise do nothing.
