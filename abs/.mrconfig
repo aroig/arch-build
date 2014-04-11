@@ -45,19 +45,3 @@ checkout = checkout_abs extra
 [testing]
 checkout = checkout_abs testing
 
-[haskell-core]
-checkout = git clone 'https://github.com/archhaskell/habs.git' 'haskell-core'
-
-sync = 
-        cd "$MR_REPO"
-        cblrepo sync
-
-update =
-        if [ "$MR_REPO" == "$PWD" ]; then
-            cblrepo sync
-            cblrepo pkgbuild $(cblrepo build base|tail -n +2)
-        else     
-            pkgname=$(basename "$PWD")
-            cd "$MR_REPO"
-            cblrepo pkgbuild $pkgname           
-        fi
