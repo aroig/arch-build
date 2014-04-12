@@ -4,3 +4,5 @@ include =
         cat "$(realpath "$mrcommonpath")"
 
 [git-annex-dev]
+
+[c2hs-dev]
