@@ -1,0 +1,6 @@
+[DEFAULT]
+include = 
+        mrcommonpath="$(dirname "$MR_CONFIG")/../../mrcommon"
+        cat "$(realpath "$mrcommonpath")"
+
+[git-annex-dev]
