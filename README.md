@@ -14,27 +14,33 @@ be installed with `pacman -Sy`.
 
 ## Overview
 
-- `abs/`: I download arch abs and haskell-core PKGBUILD's in here.
-- `aur/`: I pull PKGBUILDs from AUR here before building. I use [cower](https://github.com/falconindy/cower) for that.
+- `abs/`: packages from arch abs. They are not versioned in this repo.
+- `aur/`: I pull PKGBUILDs from AUR here before building. I use
+  [cower](https://github.com/falconindy/cower) for that.
 - `bin/`: some useful scripts.
 - `devel/`: everything I build from git goes here.
-- `groups/`: symlinks to several groups of packages. eg. python ones.
+- `groups/`: symlinks to several groups of packages. eg. python, elisp, etc.
+- `habs/`: a git submodule with [arch haskell abs](https://github.com/archhaskell/habs).
 - `misc/`: packages not fitting anywere else. binaries, or fonts, or whatever.
 - `mingw/`: mingw cross compiler tools and libs
-- `mirrors/`: mirrirlist files.
+- `mirrors/`: mirrorlist file.
 - `pkgbuild/`: some PKGBUILD templates I use.
 - `mrcommon`: the main code for the new mr actions.
+- `build/`: Where packages are build. I symlink this to a temp dir not on the
+  SSD.
+- `repos/`: Where the pacman repos are kept. I also symlink this somewhere else.
 
+In `aur`, `devel` and `misc`, individual packages are kept in its own git repo,
+this way I can keep track of modifications I make to individual packages.
 
 
 ## Configuration
 
 There are some paths to be configured in `mrcommon`.
 - `archdir`: absolute path to the root of this mr tree
-- `builddir`: absolute path to where we will compile the code
-- `repodir`: absolute path to where we will build the pacman local repos
-- `pkgbuilddir`: absolute path to where the PKGBUILD templates are
-
+- `builddir`: absolute path to where we will compile the code (defaults to `$archdir/build`)
+- `repodir`: absolute path to where we will build the pacman local repos (defaults to `$archdir/repos`)
+- `pkgbuilddir`: absolute path to where the PKGBUILD templates are (defaults to `$archdir/pkgbuild`)
 
 
 ## mr commands
@@ -74,3 +80,8 @@ There are some paths to be configured in `mrcommon`.
 - build package and update pacman repo
 
         mr update
+
+
+## TODO
+- I'd like to publish my `misc` and `devel` PKGBUILD's but I also find it useful
+  to keep them separate each one into its own repo. hmm...
