@@ -36,3 +36,8 @@ checkout = aur_checkout "$MR_REPO"
 [nodejs-mkdirp]
 
 [lib32-pangox-compat]
+
+[nsis]
+
+[jack_mixer]
+
