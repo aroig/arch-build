@@ -19,6 +19,8 @@ checkout = aur_checkout "$MR_REPO"
 
 [dropbox]
 
+[dropbox-cli]
+
 [ec2-api-tools]
 
 [impose+]
