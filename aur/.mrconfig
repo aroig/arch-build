@@ -43,3 +43,4 @@ checkout = aur_checkout "$MR_REPO"
 
 [jack_mixer]
 
+[ttf-unifont]
