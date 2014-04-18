@@ -278,6 +278,54 @@ lib=
             cower -df --ignorerepo "$pkgname" -t ..
             commit_if_changes "$srcpath" "Updated from AUR"
         }
+        ##
+        # sources_pull <path>
+        # Pulls all sources pointing to a local git repo.
+        ##
+        sources_pull() {
+            local srcpath="$1"
+            local pkgname="$(basename "$srcpath")"
+            check_package_directory "$srcpath"
+            pkgbuild_sources "$srcpath" |
+            while read src; do
+                local reponame=$(echo "$src" | sed 's|^\(.*\)::.*$|\1|')
+                local repopath=$(echo "$src" | sed 's|^.*file://\(.*\)$|\1|')
+                if [ -d "$repopath" ]; then
+                    (
+                        cd "$repopath"
+                        mr update
+                    )                    
+                    # NOTE: If I symlink to local repos instead of listing in the sources 
+                    # variable of the PKGBUILD, I could save disk on the build dir, but 
+                    # unfortunately makepkg does not understand it.
+                    # rm -Rf "$reponame"
+                    # ln -sfv "$repopath" "$reponame"
+                fi   
+            done
+        }
+        ##
+        # sources_changelog <path>
+        # Prints a changelog of the last pull for all local git sources
+        # More concreately, prints a concise log between between last reflog jump @{1}..@{0}.
+        ##
+        sources_changelog() {
+            local srcpath="$1"
+            local pkgname="$(basename "$srcpath")"
+            check_package_directory "$srcpath"
+            pkgbuild_sources "$srcpath" |
+            while read src; do
+                local reponame=$(echo "$src" | sed 's|^\(.*\)::.*$|\1|')
+                local repopath=$(echo "$src" | sed 's|^.*git+file://\(.*\)$|\1|')
+                if [ -d "$repopath" ]; then
+                    (
+                        cd "$repopath"
+                        git --no-pager log --pretty=format:"%C(cyan)%h %C(green)[%ad] %C(red)%an%C(reset). %s%d" --graph --date=relative @{1}..@{0}
+                        echo ""                    
+                    )                    
+                fi   
+            done
+        }
+        
 
 build= 
         srcpath="$PWD"
@@ -359,3 +407,18 @@ update=
         mr build
         mr repoadd
 
+pull=
+        srcpath="$PWD"
+        sources_pull "$srcpath"
+
+changelog=
+        srcpath="$PWD"        
+        sources_changelog "$srcpath"
+
+ichangelog=
+        srcpath="$PWD"        
+        pkgname="$(basename "$srcpath")"
+        if pacman -Qqu | grep "$pkgname" > /dev/null; then
+            sources_changelog "$srcpath"
+            read -p "Return to continue." ret
+        fi

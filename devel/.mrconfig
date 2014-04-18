@@ -4,26 +4,6 @@ include =
         mrcommonpath="$(dirname "$MR_CONFIG")/../mrcommon"
         cat "$(realpath "$mrcommonpath")"
 
-fetch = 
-        local srcpath="$PWD"
-        local pkgname="$(basename "$srcpath")"
-        check_package_directory "$srcpath"
-        pkgbuild_sources "$srcpath" |
-        while read src; do
-            local reponame=$(echo "$src" | sed 's|^\(.*\)::.*$|\1|')
-            local repopath=$(echo "$src" | sed 's|^.*file://\(.*\)$|\1|')
-            if [ -d "$repopath" ]; then
-                (
-                    cd "$repopath"
-                    mr update
-                )
-                # NOTE: If I symlink to local repos, that would save disk on the
-                # build dir, but unfortunately makepkg does not understand it.
-                # rm -Rf "$reponame"
-                # ln -sfv "$repopath" "$reponame"
-            fi   
-        done
-
 checkout = pkgbuild_checkout "$MR_REPO" "$1"
         
 
