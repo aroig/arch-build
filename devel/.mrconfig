@@ -111,12 +111,14 @@ skip = true
 [orgmk-dev]
 
 [pam-ssh-agent-auth-dev]
+skip = true
 
 [pass-dev]
 
 [paur-dev]
 
 [prooftree-dev]
+skip = true
 
 [python-sexpdata-dev]
 
