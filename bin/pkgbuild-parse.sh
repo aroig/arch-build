@@ -99,13 +99,22 @@ action="$2"
 source_pkgbuild "$pkgbuild"
 
 case $action in
-    pkgfile)
-        echo "$pkgname-$(get_full_version)-$(get_pkg_arch).pkg.tar.xz" 
+    pkgfiles)
+        for pkg in "${pkgname[@]}"; do
+            suffix="$(get_full_version $pkg)-$(get_pkg_arch $pkg)"
+            echo "$pkg-$suffix.pkg.tar.xz"
+        done            
         ;;
 
     source)
         for src in "${source[@]}"; do
             echo "$src"
+        done
+        ;;
+
+    pkgname)
+        for pkg in "${pkgname[@]}"; do
+            echo "$pkg"
         done
         ;;
 

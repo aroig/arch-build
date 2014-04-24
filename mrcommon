@@ -45,14 +45,13 @@ lib=
             $archdir/bin/pkgbuild-parse.sh "$@"
         }
         ##
-        # pkgbuild_package_file <path>
-        # Return the package file a PKGBUILD will produce. May need
+        # pkgbuild_packages <path>
+        # Return list of packages a PKGBUILD will produce. May need
         # access to sources in order to compute the version
         ##
-        pkgbuild_package_file() {
+        pkgbuild_packages() {
             local srcpath="$(readlink -f "$1")"
-            pkgfile="$(pkgbuild_parse "$srcpath/PKGBUILD" pkgfile)"
-            echo "$srcpath/$pkgfile"
+            pkgbuild_parse "$srcpath/PKGBUILD" pkgfiles
         }
         ##
         # pkgbuild_sources <path>
@@ -64,16 +63,17 @@ lib=
         }
         ##
         # package_uptodate <path>
-        # Check whether the package is up to date or needs building
+        # Check whether the packages are up to date or needs building
         ##
         package_uptodate() {
             local srcpath="$(readlink -f "$1")"
-            local pkgfile="$(pkgbuild_package_file $srcpath)"
-            if [ -z "$pkgfile" ]; then
-                echo "An error occurred parsing the PKGBUILD"
-                exit 1
-            fi        
-            [ -f  "$pkgfile" ]
+            pkgbuild_packages "$srcpath" |
+            while read pkg; do                           
+                if [ ! -f  "$srcpath/$pkg" ]; then
+                    return 1
+                fi
+            done
+            return 0
         }
         ## 
         # package_repo <path>
@@ -182,11 +182,12 @@ lib=
         ##
         package_install() {
             local srcpath="$(readlink -f "$1")"
-            local pkgname="$(basename "$srcpath")"
-            local pkgfile="$(pkgbuild_package_file "$srcpath")"
-            if [ -f "$pkgfile" ]; then
-                sudo pacman --noconfirm -U "file://$pkgfile"               
-            fi             
+            pkgbuild_packages "srcpath" |
+            while read pkg; do
+                if [ -f "$srcpath/$pkg" ]; then
+                    sudo pacman --noconfirm -U "file://$srcpath/$pkg"               
+                fi             
+            done
         }
         ##
         # package_install_deps <path>
@@ -206,27 +207,37 @@ lib=
         package_repoadd() {
             local srcpath="$(readlink -f "$1")"
             local tgtrepo="$2"
-            local pkgname="$(basename "$srcpath")"
-            local pkgfile="$(pkgbuild_package_file "$srcpath")"
-            local repodb="$(basename "$tgtrepo").db.tar.gz"
-            if [ -f "$pkgfile" ]; then
-                # clean older packages
-                rm -f $tgtrepo/$pkgname-*.pkg.tar.xz{,.sig}
-                # copy package and signature
-                cp "$pkgfile" "$tgtrepo/"
-                cp "$pkgfile.sig" "$tgtrepo/"
-                repo-add "$tgtrepo/$repodb" "$pkgfile"
-            fi
+            local repodb="$(basename "$tgtrepo").db.tar.gz"            
+            local pkgname
+            pkgbuild_packages "$srcpath" |
+            while read pkg; do
+                if [ -f "$srcpath/$pkg" ]; then
+                    pkgname="${pkg%-*-*-*}"
+                    # clean older packages
+                    rm -f "$tgtrepo/$pkg-"*.pkg.tar.xz{,.sig}
+                    # copy package and signature
+                    cp "$srcpath/$pkg" "$tgtrepo/"
+                    cp "$srcpath/$pkg.sig" "$tgtrepo/"
+                    repo-add "$tgtrepo/$repodb" "$srcpath/$pkg"
+                else
+                    echo "package file not found: $pkg"
+                    return 1
+                fi
+            done
         }
         package_repodel() {
             # package_repodel <path>
             # Delete a package from the repo.
             local srcpath="$(readlink -f "$1")"
             local tgtrepo="$2"
-            local pkgname="$(basename "$srcpath")"
             local repodb="$(basename "$tgtrepo").db.tar.gz"
-            rm -f $tgtrepo/$pkgname-*.pkg.tar.xz{,.sig}
-            repo-remove "$tgtrepo/$repodb" "$pkgname"
+            local pkgname
+            pkgbuild_packages "$srcpath" |
+            while read pkg; do
+                pkgname="${pkg%-*-*-*}"
+                rm -f "$tgtrepo/$pkgname"-*.pkg.tar.xz{,.sig}
+            done
+            repo-remove "$tgtrepo/$repodb" "$srcpath/$pkgname"
         }
         ##
         # pkgbuild_checkout <path> <template>
