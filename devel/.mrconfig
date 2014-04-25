@@ -152,3 +152,7 @@ skip = true
 [envoy-dev]
 
 [c2hs-dev]
+
+[python-sphinx-breathe-dev]
+
+[python-sphinx_rtd_theme-dev]
