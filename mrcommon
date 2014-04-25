@@ -70,10 +70,11 @@ lib=
             pkgbuild_packages "$srcpath" |
             while read pkg; do                           
                 if [ ! -f  "$srcpath/$pkg" ]; then
-                    return 1
+                    echo "package $pkg missing"
+                    return 0
                 fi
             done
-            return 0
+            return 1
         }
         ## 
         # package_repo <path>
@@ -221,7 +222,7 @@ lib=
                     repo-add "$tgtrepo/$repodb" "$srcpath/$pkg"
                 else
                     echo "package file not found: $pkg"
-                    return 1
+                    return 0
                 fi
             done
         }
@@ -284,7 +285,7 @@ lib=
             # NOTE: only update on branch master, to preserve possible local changes.
             if [ ! "$(git symbolic-ref HEAD 2>/dev/null)" == 'refs/heads/master' ]; then
                 echo "Not on branch master"
-                return 1
+                return 0
             fi              
             cower -df --ignorerepo "$pkgname" -t ..
             commit_if_changes "$srcpath" "Updated from AUR"
