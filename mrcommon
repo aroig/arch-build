@@ -62,19 +62,17 @@ lib=
             pkgbuild_parse "$srcpath/PKGBUILD" source
         }
         ##
-        # package_uptodate <path>
-        # Check whether the packages are up to date or needs building
+        # package_missing <path>
+        # print a list of missing package files
         ##
-        package_uptodate() {
+        package_missing() {
             local srcpath="$(readlink -f "$1")"
             pkgbuild_packages "$srcpath" |
-            while read pkg; do                           
+            while read pkg; do                             
                 if [ ! -f  "$srcpath/$pkg" ]; then
-                    echo "package $pkg missing"
-                    return 1
+                    echo "$srcpath/$pkg"
                 fi
             done
-            return 0
         }
         ## 
         # package_repo <path>
@@ -350,7 +348,7 @@ build=
         else               
             package_download "$buildpath"
         fi               
-        if package_uptodate "$buildpath"; then
+        if [ -z "$(package_missing "$buildpath")" ]; then
             echo "Package is up to date. No need to rebuild."
         else
             package_build "$buildpath"
