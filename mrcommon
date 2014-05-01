@@ -181,7 +181,7 @@ lib=
         ##
         package_install() {
             local srcpath="$(readlink -f "$1")"
-            pkgbuild_packages "srcpath" |
+            pkgbuild_packages "$srcpath" |
             while read pkg; do
                 if [ -f "$srcpath/$pkg" ]; then
                     sudo pacman --noconfirm -U "file://$srcpath/$pkg"               
