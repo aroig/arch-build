@@ -165,4 +165,7 @@ skip = true
 
 [python-tutum-dev]
 
+[python-websocket-client-dev]
+
 [tutum-cli-dev]
+
