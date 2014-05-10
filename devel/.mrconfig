@@ -156,3 +156,11 @@ skip = true
 [python-sphinx-breathe-dev]
 
 [python-sphinx_rtd_theme-dev]
+
+[python-tabulate-dev]
+
+[python-ago-dev]
+
+[python-docker-dev]
+
+[python-tutum-dev]
