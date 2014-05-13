@@ -45,6 +45,8 @@ checkout = aur_checkout "$MR_REPO"
 
 [ttf-unifont]
 
+[otf-font-awesome]
+
 [google-talkplugin]
 
 [libstdc++-doc]
