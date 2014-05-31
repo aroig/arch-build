@@ -169,3 +169,6 @@ skip = true
 
 [tutum-cli-dev]
 
+[musescore-dev]
+
+[waon-dev]

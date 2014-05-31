@@ -50,3 +50,5 @@ checkout = aur_checkout "$MR_REPO"
 [google-talkplugin]
 
 [libstdc++-doc]
+
+[a2jmidid]
