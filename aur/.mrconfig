@@ -52,3 +52,7 @@ checkout = aur_checkout "$MR_REPO"
 [libstdc++-doc]
 
 [a2jmidid]
+
+[sfarklib]
+
+[sfarkxtc]
