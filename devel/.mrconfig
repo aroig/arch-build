@@ -187,3 +187,7 @@ skip = true
 [linuxsampler-dev]
 
 [gigedit-dev]
+
+[liblscp-dev]
+
+[qsampler-dev]
