@@ -173,3 +173,5 @@ skip = true
 skip = true
 
 [waon-dev]
+
+[mididings-dev]
