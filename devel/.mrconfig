@@ -181,3 +181,9 @@ skip = true
 [non-daw-dev]
 
 [yoshimi-dev]
+
+[libgig-dev]
+
+[linuxsampler-dev]
+
+[gigedit-dev]
