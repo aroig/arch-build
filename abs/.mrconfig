@@ -9,10 +9,11 @@ lib =
         # rsync an abs repo or package to current directory
         ##
         rsync_abs() {
-            repo="$1"
+            server="$1"
+            repo="$2"
             arch="x86_64"
             rsargs='-mrtv --no-motd --delete-after --no-p --no-o --no-g'
-            rsync $rsargs "$syncserver"::abs/{$arch,any}/$repo/ . || true
+            rsync $rsargs "$server"::abs/{$arch,any}/$repo/ . || true
         }
         ## 
         # checkout an abs repo
