@@ -191,3 +191,5 @@ skip = true
 [liblscp-dev]
 
 [qsampler-dev]
+
+[extempore-dev]
