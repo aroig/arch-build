@@ -193,3 +193,5 @@ skip = true
 [qsampler-dev]
 
 [extempore-dev]
+
+[emacs-slime-dev]
