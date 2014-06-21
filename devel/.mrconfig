@@ -195,3 +195,5 @@ skip = true
 [extempore-dev]
 
 [emacs-slime-dev]
+
+[python-lupa-dev]
