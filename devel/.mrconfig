@@ -197,3 +197,5 @@ skip = true
 [emacs-slime-dev]
 
 [python-lupa-dev]
+
+[emacs-cc-mode-dev]
