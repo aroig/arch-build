@@ -56,3 +56,5 @@ checkout = aur_checkout "$MR_REPO"
 [sfarklib]
 
 [sfarkxtc]
+
+[radeontop]
