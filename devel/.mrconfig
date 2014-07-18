@@ -199,3 +199,5 @@ skip = true
 [python-lupa-dev]
 
 [emacs-cc-mode-dev]
+
+[cblrepo-dev]
