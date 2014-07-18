@@ -58,3 +58,7 @@ checkout = aur_checkout "$MR_REPO"
 [sfarkxtc]
 
 [radeontop]
+
+[pdftk-bin]
+
+[libgcj]
