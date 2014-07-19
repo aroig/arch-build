@@ -6,3 +6,5 @@ include =
 [git-annex-dev]
 
 [c2hs-dev]
+
+[cblrepo-dev]
