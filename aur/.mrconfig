@@ -62,3 +62,5 @@ checkout = aur_checkout "$MR_REPO"
 [pdftk-bin]
 
 [libgcj]
+
+[vrms-arch]
