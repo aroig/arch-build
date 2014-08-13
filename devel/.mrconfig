@@ -201,3 +201,5 @@ skip = true
 [emacs-cc-mode-dev]
 
 [cblrepo-dev]
+
+[zita-dev]
