@@ -336,8 +336,7 @@ lib=
             done
         }
         
-
-build= 
+download=
         srcpath="$PWD"
         check_package_directory "$srcpath"
         buildpath="$(prepare_build "$srcpath")"
@@ -348,11 +347,14 @@ build=
         else               
             package_download "$buildpath"
         fi               
-        if [ -z "$(package_missing "$buildpath")" ]; then
-            echo "Package is up to date. No need to rebuild."
-        else
-            package_build "$buildpath"
-        fi
+
+build= 
+        srcpath="$PWD"
+        check_package_directory "$srcpath"
+        buildpath="$(prepare_build "$srcpath")"
+        pkgname="$(basename "$srcpath")"
+        reponame="$(package_repo "$srcpath")"
+        package_build "$buildpath"
         if [ "$reponame" == 'devel' ]; then
             pkgbuild_update "$srcpath"
         fi
@@ -414,8 +416,16 @@ bump=
         pkgbuild_bump "$srcpath"
 
 update=
-        mr build
-        mr repoadd
+        srcpath="$PWD"
+        check_package_directory "$srcpath"
+        buildpath="$(prepare_build "$srcpath")"
+        mr download
+        if [ -z "$(package_missing "$buildpath")" ]; then
+            echo "Package is up to date. No need to rebuild."
+        else
+            mr build
+            mr repoadd
+        fi
 
 pull=
         srcpath="$PWD"
