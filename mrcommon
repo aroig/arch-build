@@ -4,10 +4,10 @@
 
 lib=
         # Configuring paths
-        archdir="$AB2_ARCH_DIR"
-        builddir="$archdir/build"
-        repodir="$archdir/repos"
-        pkgbuilddir="$archdir/pkgbuild"
+        basedir="$AB2_ARCH_DIR"
+        builddir="$basedir/build"
+        repodir="$basedir/repos"
+        pkgbuilddir="$basedir/pkgbuild"
         # Error out if builddir does not exist
         if [ ! -d "$builddir" ]; then
             echo "ERROR: build directory does not exist. Please create it."
@@ -42,7 +42,7 @@ lib=
         # Parse a pkgbuild file and return the given <element>
         ##
         pkgbuild_parse() {
-            $archdir/bin/pkgbuild-parse.sh "$@"
+            $basedir/bin/pkgbuild-parse.sh "$@"
         }
         ##
         # pkgbuild_packages <path>
