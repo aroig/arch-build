@@ -1,0 +1,10 @@
+[DEFAULT]
+
+include = 
+        mrcommonpath="$(dirname "$MR_CONFIG")/../mrcommon"
+        cat "$(realpath "$mrcommonpath")"
+
+checkout = pkgbuild_checkout "$MR_REPO" "$1"
+        
+
+[sage]
